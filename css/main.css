@@ -1,0 +1,11 @@
+body {
+  text-align: center;
+  background-color: black;
+}
+
+#trace{
+  position:absolute;
+  width:90vh;
+  height:90%;
+  top:5%;
+}
