@@ -1,4 +1,4 @@
-var $ = function( id, elem ) {
+var $ = function(id, elem) {
 	var ret;
 	var root = ((elem)?elem:document);
 	var spl = id.split(">");
@@ -31,8 +31,6 @@ function inheritFrom(parent,addMethods){
     }
   };
 
-	//console.log(_parent);
-
   ret.prototype = Object.create(_parent && _parent.prototype, {
     constructor: {
       value: ret,
@@ -43,13 +41,13 @@ function inheritFrom(parent,addMethods){
   });
   if (_parent) ret.__proto__ = _parent;
 
-	if(typeof addMethods === 'function')
+  if(typeof addMethods === 'function')
 		addMethods.call(ret.prototype);
 
   return ret;
 }
 
-Function.prototype.inherits = function (parent) {
+Function.prototype.inherits = function(parent) {
   this.prototype = Object.create(parent && parent.prototype, {
     constructor: {
       value: this,

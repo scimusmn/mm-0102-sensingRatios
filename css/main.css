@@ -5,7 +5,10 @@ body {
 
 #trace{
   position:absolute;
-  width:90vh;
-  height:90%;
+  width:90vmin;
+  height:90vmin;
   top:5%;
+  margin: 0 auto;
+  left:0;
+  right:0;
 }
