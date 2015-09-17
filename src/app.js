@@ -35,20 +35,22 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js'], fun
     this.addPoint(this.mouse);
   }, false);
 
+  //when the window resizes, resize the canvas.
   window.onresize = function() {
     $('#trace').height = $('#trace').clientHeight;
     $('#trace').width = $('#trace').clientWidth;
   }
 
+  //when the trace receives a new point, update the audio tones.
   $('#trace').onNewPoint = function() {
     ramp(left, Math.pow(2, $('#trace').lastPoint().x * 7 + 4));
     ramp(right, Math.pow(2, (1 - $('#trace').lastPoint().y) * 7 + 4));
   };
 
+  //set the trace to fade in the window
   $('#trace').fade = true;
   $('#trace').lineColor = '#f00';
 
-  //T("pan", {pos:1}, T("sin", {freq:330})).play();
-
+  //set the canvas to redraw at 30fps
   setInterval(function(){$("#trace").draw();},1000/30);
 });

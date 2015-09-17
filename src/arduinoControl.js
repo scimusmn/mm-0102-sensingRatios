@@ -1,4 +1,6 @@
 include(["src/web-socket.js"],function(){
+
+	//extending HTMLElement for the input pin elements
 	var inputPin = inheritFrom(HTMLElement,function(){
 		this.createdCallback = function () {
 	    this.type = this.getAttribute("type");
