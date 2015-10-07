@@ -1,6 +1,6 @@
 # Sensing Ratios math interactive
 
-Sensing Ratios interactive application for the Math Moves exhibit at the Science Museum of Minnesota.
+Sensing Ratios interactive application for the [Math Moves exhibit](http://mathmoves.org/) at the Science Museum of Minnesota.
 
 ## Disclaimer
 This code is offered here for example and reference. The compiled application is not intended for public consumption outside of the exhibit. This repository is lacking the media files and hardware that make up the full application.
