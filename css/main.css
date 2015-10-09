@@ -3,9 +3,12 @@ body {
   background-color: black;
 }
 
-h1, h2, h3, div {
-  position: absolute;
+h1, h2, h3 {
   color: white;
+}
+
+div {
+  position: absolute;
 }
 
 .left {
@@ -17,6 +20,7 @@ h1, h2, h3, div {
 }
 
 .title {
+  position: absolute;
   top: 150px;
 }
 

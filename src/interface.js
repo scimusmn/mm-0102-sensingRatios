@@ -18,11 +18,11 @@ function updateFrequencyReadouts(inLeft, inRight) {
 
   // Update left frequency readout
   var newLeft = zeroPad(inLeft, zeroPadding);
-  $('#fLeft').innerHTML = newLeft;
+  $('#fLeft').text(newLeft);
 
   // Update right frequency readout
   var newRight = zeroPad(inRight, zeroPadding);
-  $('#fRight').innerHTML = newRight;
+  $('#fRight').text(newRight);
 
 }
 
@@ -35,7 +35,7 @@ function cycleActivity(reset) {
   reset = typeof reset !== 'undefined' ? reset : false;
 
   // Increment pattern
-  if (reset === true || currentActivity >= numActivities) {
+  if (reset === true || currentActivity >= numActivities - 1) {
     currentActivity = 0;
   } else {
     currentActivity++;
@@ -48,6 +48,8 @@ function cycleActivity(reset) {
   // Swap in new code and visual
   $('#activities_container .activity').hide();
   $('#activities_container .activity').eq(currentActivity).show();
+
+  console.log('cycleActivity', reset, currentActivity);
 
 }
 
@@ -73,12 +75,11 @@ function resetForNewUser() {
   // Show first activity
   cycleActivity(true);
 
-  // Show new user dialog
-  $('.overlay').show();
-
-  // Fade out after delay
-  setTimeout(function() {
-    $('.overlay').fadeOut('slow');
-  }, 5000);
+  // Show new user dialog. Fade out after delay
+  if ($('.overlay').is(':hidden')) {
+    $('.overlay').show().delay(5000).fadeOut('slow');
+  }
 
 }
+
+$('.overlay').hide();

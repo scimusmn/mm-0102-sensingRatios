@@ -61,13 +61,13 @@ include(['src/arduinoControl.js', 'src/interface.js', 'src/smm_graph.js','src/ve
   document.onkeypress = function (e) {
       var keyCode = (window.event) ? e.which : e.keyCode;
 
-      console.log('keycode', keyCode);
-
       if (keyCode === 97){
-        // 'a' = cycle activity
+
+        // 'a' = Screen activity button
         cycleActivity();
 
       } else if (keyCode === 110) {
+
         // 'n' = New user button
         resetForNewUser();
 
