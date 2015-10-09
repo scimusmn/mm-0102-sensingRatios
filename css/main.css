@@ -3,17 +3,17 @@ body {
   background-color: black;
 }
 
-h1, h2, h3 {
+h1, h2, h3, div {
   position: absolute;
   color: white;
 }
 
 .left {
-  left: 250px;
+  left: 150px;
 }
 
 .right {
-  left: 1150px;
+  left: 1350px;
 }
 
 .title {
@@ -22,6 +22,26 @@ h1, h2, h3 {
 
 .freq {
   top: 500px;
+}
+
+.units {
+  font-size: 0.5em;
+}
+
+.overlay {
+  width:100%;
+  height: 100%;
+  background: rgba(0, 0, 222, 0.5);
+  left: 0px;
+}
+
+.dialog {
+  width:33%;
+  top: 30%;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 50px;
+  margin: auto;
+  position: relative;
 }
 
 #trace{
