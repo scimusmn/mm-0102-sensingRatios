@@ -176,17 +176,17 @@ include(["src/pointStack.js"],function () {
 			//this.setup(this);
 			this.range = new param();
 
-			var xR = {min:$("|>xMin",this),max:$("|>xMax",this)};
-			var yR = {min:$("|>yMin",this),max:$("|>yMax",this)};
+			var xR = {min:_S("|>xMin",this),max:_S("|>xMax",this)};
+			var yR = {min:_S("|>yMin",this),max:_S("|>yMax",this)};
 			this.setRange(xR.min,xR.max,yR.min,yR.max);
-			this.setNumDivs($("|>xDiv",this),$("|>yDiv",this));
+			this.setNumDivs(_S("|>xDiv",this),_S("|>yDiv",this));
 			var flip = "";
-			if(flip = $("|>flip",this)){
-				this.range.x.flip = ~$("|>flip",this).indexOf("x");
-				this.range.y.flip = ~$("|>flip",this).indexOf("y");
+			if(flip = _S("|>flip",this)){
+				this.range.x.flip = ~_S("|>flip",this).indexOf("x");
+				this.range.y.flip = ~_S("|>flip",this).indexOf("y");
 			}
 
-			numPoints = $("|>numPoints",this);
+			numPoints = _S("|>numPoints",this);
 
 
 			ctx = this.getContext("2d");
