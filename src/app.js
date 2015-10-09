@@ -19,8 +19,7 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js'], fun
       channel.newVal = newVal;
       channel.freq.value -= sign(channel.freq.value - channel.newVal) * .4;
       setTimeout(function() {ramp(channel, channel.newVal);}, 1);
-    }
-    else channel.freq.value = newVal;
+    } else channel.freq.value = newVal;
   }
 
   //on mouse move over the trace, update the mouse position
@@ -28,7 +27,7 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js'], fun
     var rect = this.getBoundingClientRect();
     this.mouse = {
       x: (evt.clientX - rect.left) / this.width,
-      y: (evt.clientY - rect.top) / this.height
+      y: (evt.clientY - rect.top) / this.height,
     };
 
     //add the current mouse position to the stack of current points.
@@ -45,12 +44,31 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js'], fun
   $('#trace').onNewPoint = function() {
     ramp(left, Math.pow(2, $('#trace').lastPoint().x * 7 + 4));
     ramp(right, Math.pow(2, (1 - $('#trace').lastPoint().y) * 7 + 4));
+
+    newPointUpdate(Math.round($('#trace').lastPoint().x * 100), Math.round($('#trace').lastPoint().y * 100));
+
   };
+
+  function newPointUpdate(inLeft, inRight) {
+
+    console.log('updateInterface', inLeft, inRight);
+
+    var digitPadding = 4;
+
+    // Update left frequency readout
+    var newLeft = zeroPad(inLeft, digitPadding);
+    $('#fLeft').innerHTML = newLeft;
+
+    // Update right frequency readout
+    var newRight = zeroPad(inRight, digitPadding);
+    $('#fRight').innerHTML = newRight;
+
+  }
 
   //set the trace to fade in the window
   $('#trace').fade = true;
   $('#trace').lineColor = '#f00';
 
   //set the canvas to redraw at 30fps
-  setInterval(function(){$("#trace").draw();},1000/30);
+  setInterval(function() {$('#trace').draw();}, 1000 / 30);
 });

@@ -210,3 +210,9 @@ function aveCont(points){
 function map(val,inMin,inMax,outMin,outMax){
 	return (val-inMin)*(outMax-outMin)/(inMax-inMin)+outMin;
 }
+
+function zeroPad(num, size) {
+  var s = num+"";
+  while (s.length < size) s = "0" + s;
+  return s;
+}

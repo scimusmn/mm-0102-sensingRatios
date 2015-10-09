@@ -3,6 +3,27 @@ body {
   background-color: black;
 }
 
+h1, h2, h3 {
+  position: absolute;
+  color: white;
+}
+
+.left {
+  left: 250px;
+}
+
+.right {
+  left: 1150px;
+}
+
+.title {
+  top: 150px;
+}
+
+.freq {
+  top: 500px;
+}
+
 #trace{
   position:absolute;
   width:90vmin;
