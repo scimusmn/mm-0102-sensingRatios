@@ -84,6 +84,10 @@ include(["src/pointStack.js"],function () {
 			if(this.points.length) return {x:this.convert(this.points.last().x,"x"),y:this.convert(this.points.last().y,"y")};
 		}
 
+		this.lastPoint = function(){
+			if(this.points.length) return {x:this.convert(this.points.last().x,"x"),y:this.convert(this.points.last().y,"y")};
+		}
+
 		this.drawTrace = function () {
 			var ctx = this.getContext("2d");
 			ctx.lineWidth=this.lineWidth;
@@ -100,6 +104,10 @@ include(["src/pointStack.js"],function () {
 					xc = this.width*(self.points[i].x + self.points[i + 1].x) / 2;
 					yc = this.height*(self.points[i].y + self.points[i + 1].y) / 2;
 					ctx.quadraticCurveTo(self.points[i].x*this.width, self.points[i].y*this.height, xc, yc);
+
+					//tn
+					ctx.strokeStyle = self.points[i].color;
+
 					//ctx.stroke();
 					if(this.fade){
 						ctx.stroke();

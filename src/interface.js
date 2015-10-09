@@ -49,8 +49,6 @@ function cycleActivity(reset) {
   $('#activities_container .activity').hide();
   $('#activities_container .activity').eq(currentActivity).show();
 
-  console.log('cycleActivity', reset, currentActivity);
-
 }
 
 /**

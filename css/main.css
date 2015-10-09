@@ -37,6 +37,7 @@ div {
   height: 100%;
   background: rgba(0, 0, 222, 0.5);
   left: 0px;
+  top: 0px;
 }
 
 .dialog {
