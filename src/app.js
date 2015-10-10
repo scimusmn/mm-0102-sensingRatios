@@ -8,8 +8,8 @@ include(['src/arduinoControl.js', 'src/interface.js', 'src/smm_graph.js','src/ve
   var posRight = T(1);
 
 /* Commented out to stop sound during development */
-  // T('pan', {pos:0}, left).play();
-  // T('pan', {pos:1}, right).play();
+  T('pan', {pos:0}, left).play();
+  T('pan', {pos:1}, right).play();
 
   left.newVal = 0;
   right.newVal = 0;

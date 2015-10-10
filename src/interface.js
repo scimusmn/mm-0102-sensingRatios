@@ -3,9 +3,10 @@
 var zeroPadding = 4;
 
 var currentActivity = 0;
-var numActivities = 4;
+var numActivities = 5;
 
 var titles = [{en:'Try to Trace the Lines', es:'Tratar de trazar las lineas'},
+              {en:'Constant ratio', es:'Diferencia constante'},
               {en:'Constant ratio', es:'Diferencia constante'},
               {en:'Can you trace the circle?', es:'Se puede trazar el circulo?'},
               {en:'Ratios', es:'Ratios'},
@@ -48,6 +49,9 @@ function cycleActivity(reset) {
   // Swap in new code and visual
   $('#activities_container .activity').hide();
   $('#activities_container .activity').eq(currentActivity).show();
+
+  // Tell graph to update overlay mode
+  _S('#trace').setOverlayMode(currentActivity);
 
 }
 
