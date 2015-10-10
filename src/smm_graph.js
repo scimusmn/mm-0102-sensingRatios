@@ -29,6 +29,9 @@ include(["src/pointStack.js"],function () {
 		// Default to stairs overlay
 		this.currentOverlayMode = this.OVERLAY_STAIRS;
 
+		// Callback to export tooltip data.
+		this.tipCallback = {};
+
 		this.points = null;
 
 		this.fade = false;
@@ -136,8 +139,9 @@ include(["src/pointStack.js"],function () {
 		/* ------------- */
 		/* Grid Overlays */
 		/* ------------- */
-		this.setOverlayMode = function(mode) {
+		this.setOverlayMode = function(mode, tipCallback) {
 			this.currentOverlayMode = mode;
+			this.tipCallback = tipCallback;
 		}
 
 		this.drawOverlay = function() {
@@ -250,18 +254,23 @@ include(["src/pointStack.js"],function () {
 			// Find closest 'whole' ratio
 			var ratio = gridX / gridY;
 
-			// console.log('current ratio:', gridX +':'+ gridY);
-
-			this.drawLineByRatio(ratio);
-
 			var cellWidth = this.width/this.range.x.divs;
+			var snappedX = gridX*cellWidth;
+			var snappedY = this.height - gridY * cellWidth;
+
+			var reduced = reduce(gridX, gridY);
+
+			// console.log('current ratio:', gridX +':'+ gridY);
+			var tipTxt = reduced[0] +':'+ reduced[1] + ' ratio';
+			this.tipCallback({x:snappedX, y:snappedY, text:tipTxt});
+			this.drawLineByRatio(ratio);
 
 			// Draw snapped coordinate
 			ctx.fillStyle = 'rgba(255,255,255,1)';
 			ctx.strokeStyle = 'rgba(0,0,0,0.3)';
 			ctx.lineWidth = 1;
 			ctx.beginPath();
-			ctx.arc(gridX*cellWidth, this.height - gridY*cellWidth, 5, 0,2*Math.PI);
+			ctx.arc(snappedX, snappedY, 5, 0,2*Math.PI);
 			ctx.fill();
 			ctx.stroke();
 			ctx.closePath();

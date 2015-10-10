@@ -5,6 +5,10 @@ var zeroPadding = 4;
 var currentActivity = 0;
 var numActivities = 5;
 
+var graph = _S('#trace');
+var gOffsetX = $('#trace').offset().left;
+var gOffsetY = $('#trace').offset().top;
+
 var titles = [{en:'Try to Trace the Lines', es:'Tratar de trazar las lineas'},
               {en:'Constant ratio', es:'Diferencia constante'},
               {en:'Constant ratio', es:'Diferencia constante'},
@@ -51,7 +55,26 @@ function cycleActivity(reset) {
   $('#activities_container .activity').eq(currentActivity).show();
 
   // Tell graph to update overlay mode
-  _S('#trace').setOverlayMode(currentActivity);
+  graph.setOverlayMode(currentActivity, function(tipData) {
+
+    console.log('Graph->interface callback:', tipData, gOffsetX, gOffsetY);
+    
+    $('.tooltip .tiptext').text(tipData.text);
+    $('.tooltip').css('left', tipData.x + gOffsetX + 65);
+    $('.tooltip').css('top', tipData.y + gOffsetY + 0);
+
+
+  });
+
+  if (currentActivity === 4){
+
+    $('.tooltip').show();
+
+  } else {
+
+    $('.tooltip').hide();
+
+  }
 
 }
 
