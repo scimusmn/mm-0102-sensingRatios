@@ -4,19 +4,19 @@ include(['src/web-socket.js'], function() {
       this.type = this.getAttribute('type');
       this.pin = this.getAttribute('pin');
       if(this.type == 'analog'){
-        this.min = _S('|>low',this);
-        this.max = _S('|>hi',this);
+        this.min = µ('|>low',this);
+        this.max = µ('|>hi',this);
         this.report = this.getAttribute('report');
         var result = this.getAttribute('result').split('.');
         if (result.length > 1) {
-          this.target = _S(result[0]);
+          this.target = µ(result[0]);
           this.which = result[1];
         }
       }
       else if (this.type == 'digital') {
         var result = this.getAttribute('result').split('.');
         if (result.length > 1) {
-          this.target = _S(result[0]);
+          this.target = µ(result[0]);
           this.which = result[1];
         }
       }
@@ -133,10 +133,10 @@ include(['src/web-socket.js'], function() {
 
     this.createdCallback = function () {
       var self = this;
-      _S('$web-socket').onArduinoConnect = arduino.connectCB.bind(self);
-      wsClient = _S('$web-socket');
-      if(typeof _S('$web-socket') === 'object')
-        _S('$web-socket').customCallback = this.onMessage.bind(this);
+      µ('web-socket').onArduinoConnect = arduino.connectCB.bind(self);
+      wsClient = µ('web-socket');
+      if(typeof µ('web-socket') === 'object')
+        µ('web-socket').customCallback = this.onMessage.bind(this);
 
     }
   });

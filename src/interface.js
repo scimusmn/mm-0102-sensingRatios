@@ -5,7 +5,7 @@ var zeroPadding = 4;
 var currentActivity = 0;
 var numActivities = 5;
 
-var graph = _S('#trace');
+var graph = µ('#trace');
 var gOffsetX = $('#trace').offset().left;
 var gOffsetY = $('#trace').offset().top;
 
