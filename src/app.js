@@ -1,27 +1,8 @@
-include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/vendor/timbre.js','src/hardware.js','src/smm_config.js'], function() {
+include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/audio.js','src/hardware.js'], function() {
 
-  //declare the the wave functions for the left and right audio channels.
-  var left = T('sin', {freq:440,mul:.5});
-  var right = T('sin', {freq:440,mul:.5});
-
-  var pos = T(0);
-  var posRight = T(1);
-
-  /* Comment out to mute sounds during development */
-  // T('pan', {pos:0}, left).play();
-  // T('pan', {pos:1}, right).play();
-
-  left.newVal = 0;
-  right.newVal = 0;
-
-  //ramp function for smoothing the audio audio tones.
-  function ramp(channel,newVal) {
-    if (Math.abs(channel.freq.value - newVal) > 1) {
-      channel.newVal = newVal;
-      channel.freq.value -= sign(channel.freq.value - channel.newVal) * 1;
-      setTimeout(function() {ramp(channel, channel.newVal);}, 1);
-    } else channel.freq.value = newVal;
-  }
+  //mute the left and right audio channels.
+  audio.left.unmute();
+  audio.right.unmute();
 
   //on mouse move over the trace, update the mouse position
   µ('#trace').addEventListener('mousemove', function(evt) {
@@ -43,10 +24,11 @@ include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/ve
 
   //when the trace receives a new point, update the audio tones.
   µ('#trace').onNewPoint = function() {
-    ramp(left, Math.pow(2, µ('#trace').lastPoint().x * 7 + 4));
-    ramp(right, Math.pow(2, (1 - µ('#trace').lastPoint().y) * 7 + 4));
+    audio.left.changeFrequency(1-µ('#trace').lastPoint().y,.125);
+    audio.right.changeFrequency(µ('#trace').lastPoint().x,.125);
 
-    updateFrequencyReadouts(Math.round(µ('#trace').lastPoint().x * 100), Math.round(µ('#trace').lastPoint().y * 100));
+
+    updateFrequencyReadouts(audio.left.getFrequency(), audio.right.getFrequency());
 
   };
 

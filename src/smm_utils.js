@@ -240,6 +240,12 @@ function map(val,inMin,inMax,outMin,outMax){
 	return (val-inMin)*(outMax-outMin)/(inMax-inMin)+outMin;
 }
 
+function clamp(val,Min,Max) {
+	with (Math){
+		return max(Min,min(val,Max));
+	}
+}
+
 function zeroPad(num, size) {
   var s = num+"";
   while (s.length < size) s = "0" + s;
