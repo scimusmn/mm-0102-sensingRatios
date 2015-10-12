@@ -1,17 +1,17 @@
 
 // I've changed this selector function
-// to use '_S' instead of '$'. '$' is so commonly
+// to use 'µ' instead of '$'. '$' is so commonly
 // associated with jquery that it will be confusing
 // for future developers. The change also allows
 // incorporation of jquery without conflicts.
 // -@tnordberg, 10/09/2015
 
-var _S = function(id, elem) {
+var µ = function(id, elem) {
 	var ret;
 	var root = ((elem)?elem:document);
 	var spl = id.split(">");
 	switch(spl[0].charAt(0)){
-		case '#':
+		/*case '#':
 			ret= root.getElementById( spl[0].substr(1) );
 			break;
 		case '.':
@@ -19,12 +19,12 @@ var _S = function(id, elem) {
 			break;
 		case '$':
 			ret= root.getElementsByTagName( spl[0].substr(1) )[0];
-			break;
+			break;*/
 		case '|':
 			ret= root;
 			break;
 		default:
-			ret= root.getElementById( spl[0] );
+			ret= root.querySelector( spl[0] );
 			break;
 	}
 	if(spl.length<=1) return ret;

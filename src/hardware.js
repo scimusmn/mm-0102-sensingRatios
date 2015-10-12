@@ -1,5 +1,9 @@
 include(['src/arduinoControl.js'], function() {
   var inPut = inheritFrom(HTMLElement, function() {
+    this.handler = function(val) {
+
+    };
+
     this.createdCallback = function() {
 
     };
@@ -8,6 +12,11 @@ include(['src/arduinoControl.js'], function() {
   document.registerElement('in-put', inPut);
 
   var outPut = inheritFrom(HTMLElement, function() {
+    this.mode = true;
+
+    this.set = function(val) {
+    };
+
     this.createdCallback = function() {
 
     };

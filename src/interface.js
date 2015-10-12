@@ -5,7 +5,7 @@ var zeroPadding = 4;
 var currentActivity = 0;
 var numActivities = 5;
 
-var graph = _S('#trace');
+var graph = µ('#trace');
 var gOffsetX = $('#trace').offset().left;
 var gOffsetY = $('#trace').offset().top;
 
@@ -58,7 +58,7 @@ function cycleActivity(reset) {
   graph.setOverlayMode(currentActivity, function(tipData) {
 
     console.log('Graph->interface callback:', tipData, gOffsetX, gOffsetY);
-    
+
     $('.tooltip .tiptext').text(tipData.text);
     $('.tooltip').css('left', tipData.x + gOffsetX + 65);
     $('.tooltip').css('top', tipData.y + gOffsetY + 0);

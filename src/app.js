@@ -7,7 +7,7 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js','src/
   var pos = T(0);
   var posRight = T(1);
 
-/* Commented out to stop sound during development */
+  /* Commented out to stop sound during development */
   T('pan', {pos:0}, left).play();
   T('pan', {pos:1}, right).play();
 
@@ -24,7 +24,7 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js','src/
   }
 
   //on mouse move over the trace, update the mouse position
-  _S('#trace').addEventListener('mousemove', function(evt) {
+  µ('#trace').addEventListener('mousemove', function(evt) {
     var rect = this.getBoundingClientRect();
     this.mouse = {
       x: (evt.clientX - rect.left) / this.width,
@@ -37,40 +37,40 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js','src/
 
   //when the window resizes, resize the canvas.
   window.onresize = function() {
-    _S('#trace').height = _S('#trace').clientHeight;
-    _S('#trace').width = _S('#trace').clientWidth;
+    µ('#trace').height = µ('#trace').clientHeight;
+    µ('#trace').width = µ('#trace').clientWidth;
   }
 
   //when the trace receives a new point, update the audio tones.
-  _S('#trace').onNewPoint = function() {
-    ramp(left, Math.pow(2, _S('#trace').lastPoint().x * 7 + 4));
-    ramp(right, Math.pow(2, (1 - _S('#trace').lastPoint().y) * 7 + 4));
+  µ('#trace').onNewPoint = function() {
+    ramp(left, Math.pow(2, µ('#trace').lastPoint().x * 7 + 4));
+    ramp(right, Math.pow(2, (1 - µ('#trace').lastPoint().y) * 7 + 4));
 
-    updateFrequencyReadouts(Math.round(_S('#trace').lastPoint().x * 100), Math.round(_S('#trace').lastPoint().y * 100));
+    updateFrequencyReadouts(Math.round(µ('#trace').lastPoint().x * 100), Math.round(µ('#trace').lastPoint().y * 100));
 
   };
 
   //set the trace to fade in the window
-  _S('#trace').fade = true;
-  _S('#trace').lineColor = '#f00';
+  µ('#trace').fade = true;
+  µ('#trace').lineColor = '#f00';
 
   //set the canvas to redraw at 30fps
-  setInterval(function() {_S('#trace').draw();}, 1000 / 30);
+  setInterval(function() {µ('#trace').draw();}, 1000 / 30);
 
   // Set up key listeners (for debug)
-  document.onkeypress = function (e) {
-      var keyCode = (window.event) ? e.which : e.keyCode;
+  document.onkeypress = function(e) {
+    var keyCode = (window.event) ? e.which : e.keyCode;
 
-      if (keyCode === 97){
+    if (keyCode === 97) {
 
-        // 'a' = Screen activity button
-        cycleActivity();
+      // 'a' = Screen activity button
+      cycleActivity();
 
-      } else if (keyCode === 110) {
+    } else if (keyCode === 110) {
 
-        // 'n' = New user button
-        resetForNewUser();
+      // 'n' = New user button
+      resetForNewUser();
 
-      }
+    }
   };
 });
