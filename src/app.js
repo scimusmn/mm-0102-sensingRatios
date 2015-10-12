@@ -1,4 +1,4 @@
-include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js','src/hardware.js','src/smm_config.js'], function() {
+include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/vendor/timbre.js','src/hardware.js','src/smm_config.js'], function() {
 
   //declare the the wave functions for the left and right audio channels.
   var left = T('sin', {freq:440,mul:.5});
