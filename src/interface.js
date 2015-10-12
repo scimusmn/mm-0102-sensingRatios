@@ -127,13 +127,6 @@ function resetForNewUser() {
 
 }
 
-// Set inital interface state.
-setTimeout(function() {
-  cycleActivity(true);
-}, 1000);
-
-$('.overlay').hide();
-
 /**
  * Graph Overlays
  */
@@ -198,8 +191,8 @@ function drawStairs(ctx) {
 
   ctx.stroke();
 
-  var unison = graph.gridToPixelCoords(4, 4);
-  var octave = graph.gridToPixelCoords(4, 3);
+  var unison = graph.getPixelCoords(4, 4);
+  var octave = graph.getPixelCoords(4, 3);
 
   tipCallback([{x:unison.x, y:unison.y, enText:'Unison', esText:'Unisono'},
                 {x:octave.x, y:octave.y, enText:'Octave Difference', esText:'Diferencia de octava'},
@@ -260,7 +253,7 @@ function drawInteractiveRatios(ctx) {
 
   // Find closest 'whole' ratio
   var ratio = gridX / gridY;
-  var snapped = graph.gridToPixelCoords(gridX, gridY);
+  var snapped = graph.getPixelCoords(gridX, gridY);
 
   var reduced = reduce(gridX, gridY);
 
@@ -291,4 +284,13 @@ function drawLineByRatio(ratio, ctx) {
   ctx.stroke();
 
 }
+
+/**
+ * Set inital interface state.
+ */
+setTimeout(function() {
+  cycleActivity(true);
+}, 1000);
+
+$('.overlay').hide();
 

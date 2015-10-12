@@ -63,6 +63,17 @@ include(["src/pointStack.js"],function () {
 			return map(val,0,1,this.range[which].min,this.range[which].max);
 		}
 
+
+		// Convert grid coordinates to pixel coordinates
+		this.getPixelCoords = function(gridX, gridY) {
+
+			var pixelX = gridX * this.cellWidth;
+			var pixelY = this.height - gridY * this.cellHeight;
+
+			return {x:pixelX, y:pixelY};
+
+		}
+
 		this.onNewPoint = function () {
 		}
 
@@ -81,10 +92,6 @@ include(["src/pointStack.js"],function () {
 				this.addPoint({x:this.newPoint.x.val,y:this.newPoint.y.val});
 			}
 		};
-
-		this.lastPoint = function(){
-			if(this.points.length) return {x:this.convert(this.points.last().x,"x"),y:this.convert(this.points.last().y,"y")};
-		}
 
 		this.lastPoint = function(){
 			if(this.points.length) return {x:this.convert(this.points.last().x,"x"),y:this.convert(this.points.last().y,"y")};
@@ -121,15 +128,6 @@ include(["src/pointStack.js"],function () {
 			}
 
 		};
-
-		this.gridToPixelCoords = function(gridX, gridY) {
-
-			var pixelX = this.width - gridX * this.cellWidth;
-			var pixelY = gridY * this.cellHeight;
-
-			return {x:pixelY, y:pixelX};
-
-		}
 
 		this.drawGrid = function(){
 			var ctx = this.getContext("2d");
