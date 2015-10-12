@@ -19,19 +19,6 @@ include(["src/pointStack.js"],function () {
 		var self =this;
 		//var ctx = null;
 
-		// Overlay modes
-		this.OVERLAY_STAIRS = 0;
-		this.OVERLAY_RATIOS = 1;
-		this.OVERLAY_OCTAVES = 2;
-		this.OVERLAY_CIRCLE = 3;
-		this.OVERLAY_INTERACTIVE_RATIOS = 4;
-
-		// Default to stairs overlay
-		this.currentOverlayMode = this.OVERLAY_STAIRS;
-
-		// Callback to export tooltip data.
-		this.tipCallback = {};
-
 		this.points = null;
 
 		this.fade = false;
@@ -56,6 +43,8 @@ include(["src/pointStack.js"],function () {
 			this.top=ny;
 			this.width=nw;
 			this.height=nh;
+			this.cellWidth = this.width/this.range.x.divs;
+			this.cellHeight = this.height/this.range.y.divs;
 		}
 
 		this.setNumDivs = function(xDivs,yDivs){
@@ -118,9 +107,6 @@ include(["src/pointStack.js"],function () {
 					yc = this.height*(self.points[i].y + self.points[i + 1].y) / 2;
 					ctx.quadraticCurveTo(self.points[i].x*this.width, self.points[i].y*this.height, xc, yc);
 
-					//tn
-					ctx.strokeStyle = self.points[i].color;
-
 					//ctx.stroke();
 					if(this.fade){
 						ctx.stroke();
@@ -136,160 +122,14 @@ include(["src/pointStack.js"],function () {
 
 		};
 
-		/* ------------- */
-		/* Grid Overlays */
-		/* ------------- */
-		this.setOverlayMode = function(mode, tipCallback) {
-			this.currentOverlayMode = mode;
-			this.tipCallback = tipCallback;
-		}
+		this.gridToPixelCoords = function(gridX, gridY) {
 
-		this.drawOverlay = function() {
+			var pixelX = this.width - gridX * this.cellWidth;
+			var pixelY = gridY * this.cellHeight;
 
-			var ctx = this.getContext("2d");
-			ctx.lineWidth=this.overlayWidth;
-			ctx.strokeStyle = this.overlayColor;
-
-			switch (this.currentOverlayMode) {
-				case this.OVERLAY_STAIRS:
-					this.drawStairs();
-				break;
-				case this.OVERLAY_RATIOS:
-					this.drawRatios();
-				break;
-				case this.OVERLAY_OCTAVES:
-					this.drawOctaves();
-				break;
-				case this.OVERLAY_CIRCLE:
-					this.drawCircle();
-				break;
-				case this.OVERLAY_INTERACTIVE_RATIOS:
-					this.drawInteractiveRatios();
-				break;
-				default:
-					//Don't draw an overlay.
-			}
+			return {x:pixelY, y:pixelX};
 
 		}
-
-		this.drawStairs = function(){
-
-			var cellWidth = this.width/this.range.x.divs;
-			var stepX = 0;
-			var stepY = this.height;
-
-			ctx.beginPath();
-			ctx.moveTo(stepX, stepY);
-
-			// Draw staircase
-			for(var i=0; i<this.range.x.divs; i++){
-
-				ctx.lineTo(stepX, stepY);
-
-				stepX += cellWidth;
-
-				ctx.lineTo(stepX, stepY);
-
-				stepY -= cellWidth;
-
-				ctx.lineTo(stepX, stepY);
-
-			}
-
-			ctx.stroke();
-
-		};
-
-		this.drawRatios = function(){
-
-			this.drawLineByRatio(1/2);
-			this.drawLineByRatio(2/1);
-
-		};
-
-		this.drawOctaves = function(){
-
-			var cellHeight = this.height/this.range.y.divs;
-
-			// Octave line
-			ctx.beginPath();
-			ctx.moveTo(0, this.height - cellHeight);
-			ctx.lineTo(this.width, 0 - cellHeight);
-			ctx.stroke();
-
-			// Unison Line
-			ctx.beginPath();
-			ctx.moveTo(0, this.height);
-			ctx.lineTo(this.width, 0);
-			ctx.stroke();
-
-		};
-
-		this.drawCircle = function(){
-
-			var cellWidth = this.width/this.range.x.divs;
-
-			// Frame
-			ctx.beginPath();
-			ctx.moveTo(cellWidth, this.height - cellWidth);
-			ctx.lineTo(cellWidth, cellWidth);
-			ctx.lineTo(this.width - cellWidth, cellWidth);
-			ctx.lineTo(this.width - cellWidth, this.height - cellWidth);
-			ctx.closePath();
-			ctx.stroke();
-
-			// Circle
-			ctx.beginPath();
-			ctx.arc(this.width/2, this.height/2, this.width/2 - (cellWidth), 0, 2*Math.PI);
-			ctx.stroke();
-
-		};
-
-		this.drawInteractiveRatios = function(){
-
-			// Get nearest X and Y coordinate on grid
-			var gridX = Math.round(map(this.mouse.x, 0, 1, 0, this.range.x.divs));
-			var gridY = Math.round(map(this.mouse.y, 1, 0, 0, this.range.y.divs));
-
-			// Find closest 'whole' ratio
-			var ratio = gridX / gridY;
-
-			var cellWidth = this.width/this.range.x.divs;
-			var snappedX = gridX*cellWidth;
-			var snappedY = this.height - gridY * cellWidth;
-
-			var reduced = reduce(gridX, gridY);
-
-			// console.log('current ratio:', gridX +':'+ gridY);
-			var tipTxt = reduced[0] +':'+ reduced[1] + ' ratio';
-			this.tipCallback({x:snappedX, y:snappedY, text:tipTxt});
-			this.drawLineByRatio(ratio);
-
-			// Draw snapped coordinate
-			ctx.fillStyle = 'rgba(255,255,255,1)';
-			ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-			ctx.lineWidth = 1;
-			ctx.beginPath();
-			ctx.arc(snappedX, snappedY, 5, 0,2*Math.PI);
-			ctx.fill();
-			ctx.stroke();
-			ctx.closePath();
-
-		};
-
-		this.drawLineByRatio = function(ratio){
-
-			var endX = Math.max(0, this.width * ratio);
-			var endY = Math.min(0, this.height * ratio);
-
-			ctx.beginPath();
-			ctx.moveTo(0, this.height);
-			ctx.lineTo(endX, endY);
-			ctx.stroke();
-
-		};
-		/* End Grid Overlays */
-
 
 		this.drawGrid = function(){
 			var ctx = this.getContext("2d");
@@ -339,8 +179,6 @@ include(["src/pointStack.js"],function () {
 
 			this.drawGrid(ctx,18,10);
 
-			this.drawOverlay();
-
 			this.customFGDraw();
 		};
 
@@ -376,13 +214,13 @@ include(["src/pointStack.js"],function () {
 			this.lineColor = "#000";
 			this.gridWidth = 1;
 			this.gridColor = "rgba(0,0,0,.1)";
-			this.overlayWidth = 5;
-			this.overlayColor = "rgba(255,0,0,.3)";
 			this.refreshRate = 30;
 
 			this.mouse = {x:0,y:0};
 			this.width = this.clientWidth;
 			this.height = this.clientHeight;
+			this.cellWidth = this.width/this.range.x.divs;
+			this.cellHeight = this.height/this.range.y.divs;
 
 			/*this.addEventListener('mousemove', function(evt) {
 				var rect = this.getBoundingClientRect();

@@ -7,9 +7,9 @@ include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/ve
   var pos = T(0);
   var posRight = T(1);
 
-/* Commented out to stop sound during development */
-  T('pan', {pos:0}, left).play();
-  T('pan', {pos:1}, right).play();
+  /* Comment out to mute sounds during development */
+  // T('pan', {pos:0}, left).play();
+  // T('pan', {pos:1}, right).play();
 
   left.newVal = 0;
   right.newVal = 0;
@@ -57,18 +57,16 @@ include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/ve
   //set the canvas to redraw at 30fps
   setInterval(function() {_S('#trace').draw();}, 1000 / 30);
 
-  // Set up key listeners (for debug)
+  // Set up key listeners (for debug w/o Arduino)
   document.onkeypress = function (e) {
       var keyCode = (window.event) ? e.which : e.keyCode;
 
-      if (keyCode === 97){
+      if (keyCode === 97){ // 'a' = Screen activity button
 
-        // 'a' = Screen activity button
         cycleActivity();
 
-      } else if (keyCode === 110) {
+      } else if (keyCode === 110) { // 'n' = New user button
 
-        // 'n' = New user button
         resetForNewUser();
 
       }
