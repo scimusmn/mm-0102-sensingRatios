@@ -1,4 +1,12 @@
-var $ = function( id, elem ) {
+
+// I've changed this selector function
+// to use '_S' instead of '$'. '$' is so commonly
+// associated with jquery that it will be confusing
+// for future developers. The change also allows
+// incorporation of jquery without conflicts.
+// -@tnordberg, 10/09/2015
+
+var _S = function(id, elem) {
 	var ret;
 	var root = ((elem)?elem:document);
 	var spl = id.split(">");
@@ -230,4 +238,19 @@ function aveCont(points){
 
 function map(val,inMin,inMax,outMin,outMax){
 	return (val-inMin)*(outMax-outMin)/(inMax-inMin)+outMin;
+}
+
+function zeroPad(num, size) {
+  var s = num+"";
+  while (s.length < size) s = "0" + s;
+  return s;
+}
+
+// Reduce a fraction by finding the Greatest Common Divisor and dividing by it.
+function reduce(numerator,denominator){
+  var gcd = function gcd(a,b){
+    return b ? gcd(b, a%b) : a;
+  };
+  gcd = gcd(numerator,denominator);
+  return [numerator/gcd, denominator/gcd];
 }

@@ -124,5 +124,7 @@ var includer = new function() {
   this.script = document.currentScript;
   this.app = this.script.getAttribute('main');
 
-  include(['src/smm_utils.js',this.app]);
+  // Make utils available everywhere by default
+  include(['src/smm_utils.js','src/vendor/jquery.min.js',this.app]);
+
 };
