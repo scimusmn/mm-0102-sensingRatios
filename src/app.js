@@ -1,4 +1,4 @@
-include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js'], function() {
+include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js','src/hardware.js','src/smm_config.js'], function() {
 
   //declare the the wave functions for the left and right audio channels.
   var left = T('sin', {freq:440,mul:.5});
@@ -15,12 +15,11 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js'], fun
 
   //ramp function for smoothing the audio audio tones.
   function ramp(channel,newVal) {
-    if (Math.abs(channel.freq.value - newVal) > .4) {
+    if (Math.abs(channel.freq.value - newVal) > 1) {
       channel.newVal = newVal;
-      channel.freq.value -= sign(channel.freq.value - channel.newVal) * .4;
+      channel.freq.value -= sign(channel.freq.value - channel.newVal) * 1;
       setTimeout(function() {ramp(channel, channel.newVal);}, 1);
-    }
-    else channel.freq.value = newVal;
+    } else channel.freq.value = newVal;
   }
 
   //on mouse move over the trace, update the mouse position
@@ -28,7 +27,7 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js'], fun
     var rect = this.getBoundingClientRect();
     this.mouse = {
       x: (evt.clientX - rect.left) / this.width,
-      y: (evt.clientY - rect.top) / this.height
+      y: (evt.clientY - rect.top) / this.height,
     };
 
     //add the current mouse position to the stack of current points.
@@ -52,5 +51,5 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js'], fun
   $('#trace').lineColor = '#f00';
 
   //set the canvas to redraw at 30fps
-  setInterval(function(){$("#trace").draw();},1000/30);
+  setInterval(function() {$('#trace').draw();}, 1000 / 30);
 });
