@@ -1,4 +1,4 @@
-include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js','src/hardware.js','src/smm_config.js'], function() {
+include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/vendor/timbre.js','src/hardware.js','src/smm_config.js'], function() {
 
   //declare the the wave functions for the left and right audio channels.
   var left = T('sin', {freq:440,mul:.5});
@@ -7,9 +7,9 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js','src/
   var pos = T(0);
   var posRight = T(1);
 
-  /* Commented out to stop sound during development */
-  T('pan', {pos:0}, left).play();
-  T('pan', {pos:1}, right).play();
+  /* Comment out to mute sounds during development */
+  // T('pan', {pos:0}, left).play();
+  // T('pan', {pos:1}, right).play();
 
   left.newVal = 0;
   right.newVal = 0;
@@ -57,19 +57,18 @@ include(['src/arduinoControl.js','src/smm_graph.js','src/vendor/timbre.js','src/
   //set the canvas to redraw at 30fps
   setInterval(function() {µ('#trace').draw();}, 1000 / 30);
 
-  // Set up key listeners (for debug)
-  document.onkeypress = function(e) {
-    var keyCode = (window.event) ? e.which : e.keyCode;
 
-    if (keyCode === 97) {
+  // Set up key listeners (for debug w/o Arduino)
+  document.onkeypress = function (e) {
+      var keyCode = (window.event) ? e.which : e.keyCode;
 
-      // 'a' = Screen activity button
-      cycleActivity();
+      if (keyCode === 97){ // 'a' = Screen activity button
 
-    } else if (keyCode === 110) {
+        cycleActivity();
 
-      // 'n' = New user button
-      resetForNewUser();
+      } else if (keyCode === 110) { // 'n' = New user button
+
+        resetForNewUser();
 
     }
   };
