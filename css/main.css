@@ -12,11 +12,11 @@ div {
 }
 
 .left {
-  left: 150px;
+  left: 10%;
 }
 
 .right {
-  left: 1350px;
+  right: 10%;
 }
 
 .title {
@@ -33,14 +33,15 @@ div {
 }
 
 .tooltip {
-  background: #333;
+  background: white;
   pointer-events: none;
 }
 
 .tooltip .tiptext {
   margin: 0px 10px;
   padding: 10px;
-  color: #ccc;
+  color: #555;
+  min-width: 150px;
 }
 
 .shadow {
