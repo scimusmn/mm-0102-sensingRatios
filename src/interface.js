@@ -359,7 +359,7 @@ function drawInteractiveRatios() {
                   y:graph.mouse.y * graph.height,
                 };
   var dist = distance(mCoords, snapped);
-  if (dist > (graph.cellWidth * 0.3)) {
+  if (dist > (graph.cellWidth * 0.3) || (gridX === 0 && gridY === 0)) {
     // Hide tip and exit
     $('.a5.tooltip').eq(0).hide();
     return;
@@ -387,7 +387,7 @@ function drawInteractiveRatios() {
 
   var tOffsetX = 50;
   var tOffsetY = -10;
-  if ( ratio > 1.5) {
+  if (ratio > 1.5) {
     tOffsetX = -150;
     tOffsetY = -100;
   }
