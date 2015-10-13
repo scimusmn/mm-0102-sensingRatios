@@ -46,11 +46,11 @@ var tipCallback = function() {};
 function updateFrequencyReadouts(inLeft, inRight) {
 
   // Update left frequency readout
-  var newLeft = zeroPad(inLeft, zeroPadding);
+  var newLeft = zeroPad(Math.round(inLeft), zeroPadding);
   $('#fLeft').text(newLeft);
 
   // Update right frequency readout
-  var newRight = zeroPad(inRight, zeroPadding);
+  var newRight = zeroPad(Math.round(inRight), zeroPadding);
   $('#fRight').text(newRight);
 
 }
