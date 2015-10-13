@@ -10,7 +10,7 @@ var gOffsetX = $('#trace').offset().left;
 var gOffsetY = $('#trace').offset().top;
 
 // Hook into graph drawing loop
-graph.customFGDraw = drawGraphOverlays;
+graph.customFGDraw = doGraphDrawing;
 var overlayWidth = 5;
 var overlayColor = 'rgba(255,0,0,.3)';
 
@@ -29,6 +29,10 @@ var OVERLAY_RATIOS = 1;
 var OVERLAY_OCTAVES = 2;
 var OVERLAY_CIRCLE = 3;
 var OVERLAY_INTERACTIVE_RATIOS = 4;
+
+// Re-usable colors
+var xAxisColor = 'rgba(255, 255, 0, 0.35)';
+var yAxisColor = 'rgba(122, 255, 122, 0.35)';
 
 // Default to stairs overlay
 var currentOverlayMode = OVERLAY_STAIRS;
@@ -77,23 +81,37 @@ function cycleActivity(reset) {
   // Tell graph to update overlay mode
   setOverlayMode(currentActivity, function(tipData) {
 
-    // Update tooltips
-    for (var i = 0; i < tipData.length; i++) {
+    if (tipData === 'hide') {
 
-      // Update position
-      $(tipDivs[i]).css('left', tipData[i].x + gOffsetX + 65);
-      $(tipDivs[i]).css('top', tipData[i].y + gOffsetY + 0);
-
-      // Update text
-      $(tipDivs[i]).children('.tiptext.en').text(tipData[i].enText);
-      $(tipDivs[i]).children('.tiptext.es').text(tipData[i].esText);
-      if (tipData[i].esText === '') {
-        $(tipDivs[i]).children('.tiptext.es').hide();
-      } else {
-        $(tipDivs[i]).children('.tiptext.es').show();
+      for (var i = 0; i < tipDivs.length; i++) {
+        $(tipDivs[i]).hide();
       }
 
-    };
+    } else {
+
+      // TODO: Figure out proper offset based on location in
+      // graph, then draw connecting tooltip line.
+
+      // Update visible tooltips
+      for (var i = 0; i < tipData.length; i++) {
+
+        $(tipDivs[i]).show();
+
+        // Update text
+        $(tipDivs[i]).children('.tiptext.en').text(tipData[i].enText);
+        $(tipDivs[i]).children('.tiptext.es').text(tipData[i].esText);
+        if (tipData[i].esText === '') {
+          $(tipDivs[i]).children('.tiptext.es').hide();
+        } else {
+          $(tipDivs[i]).children('.tiptext.es').show();
+        }
+
+        // Update position
+        $(tipDivs[i]).css('left', tipData[i].x + gOffsetX + 65);
+        $(tipDivs[i]).css('top', tipData[i].y + gOffsetY + 0);
+
+      };
+    }
 
   });
 
@@ -128,8 +146,21 @@ function resetForNewUser() {
 }
 
 /**
- * Graph Overlays
+ * Graph Drawing
  */
+
+function doGraphDrawing() {
+
+  var ctx = graph.getContext('2d');
+
+  drawGraphOverlays(ctx);
+
+  drawGutters(ctx);
+
+  drawCrosshair(ctx);
+
+}
+
 function setOverlayMode(mode, _tipCallback) {
 
   currentOverlayMode = mode;
@@ -137,9 +168,65 @@ function setOverlayMode(mode, _tipCallback) {
 
 };
 
-function drawGraphOverlays() {
+function drawCrosshair(ctx) {
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(graph.mouse.x * graph.width, graph.mouse.y * graph.height, 10, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.closePath();
+}
 
-  var ctx = graph.getContext('2d');
+function drawGutters(ctx) {
+
+  // Draw bold notches
+  // ctx.strokeStyle = '#000';
+  // ctx.lineWidth = 5;
+  // var notchSize = 0.1;
+  // for (var i = 1; i <= graph.range.x.divs; i++) {
+  //   ctx.beginPath();
+  //   ctx.moveTo(i * graph.cellWidth, graph.height);
+  //   ctx.lineTo(i * graph.cellWidth, graph.height - graph.cellHeight * notchSize);
+  //   ctx.stroke();
+  // }
+
+  // for (var i = 0; i < graph.range.y.divs; i++) {
+  //   ctx.beginPath();
+  //   ctx.moveTo(0, i * graph.cellHeight);
+  //   ctx.lineTo(graph.cellWidth * notchSize, i * graph.cellHeight);
+  //   ctx.stroke();
+  // }
+
+  var pixelX = graph.mouse.x * graph.width;
+  var pixelY = graph.mouse.y * graph.height;
+
+  // X Axis Tracker
+  ctx.strokeStyle = xAxisColor;
+  ctx.fillStyle = xAxisColor;
+  ctx.lineWidth = graph.lineWidth;
+  ctx.beginPath();
+  ctx.moveTo(pixelX, pixelY);
+  ctx.lineTo(pixelX, graph.height);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(pixelX, graph.height, 10, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // Y Axis Tracker
+  ctx.strokeStyle = yAxisColor;
+  ctx.fillStyle = yAxisColor;
+  ctx.lineWidth = graph.lineWidth;
+  ctx.beginPath();
+  ctx.moveTo(pixelX, pixelY);
+  ctx.lineTo(0, pixelY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, pixelY, 10, 0, 2 * Math.PI);
+  ctx.fill();
+
+}
+
+function drawGraphOverlays(ctx) {
+
   ctx.lineWidth = overlayWidth;
   ctx.strokeStyle = overlayColor;
 
@@ -255,6 +342,17 @@ function drawInteractiveRatios(ctx) {
   var ratio = gridX / gridY;
   var snapped = graph.getPixelCoords(gridX, gridY);
 
+  // Exit if we aren't close enough to a snapped point
+  var mCoords = { x:graph.mouse.x * graph.width,
+                  y:graph.mouse.y * graph.height,
+                };
+  var dist = distance(mCoords, snapped);
+  if (dist > (graph.cellWidth * 0.3)) {
+    // Clear tip
+    tipCallback('hide');
+    return;
+  }
+
   var reduced = reduce(gridX, gridY);
 
   var tipTxt = reduced[0] + ':' + reduced[1] + ' ratio';
@@ -263,7 +361,7 @@ function drawInteractiveRatios(ctx) {
 
   // Draw snapped coordinate
   ctx.fillStyle = 'rgba(255,255,255,1)';
-  ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+  ctx.strokeStyle = 'rgba(0,0,0,1)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.arc(snapped.x, snapped.y, 5, 0, 2 * Math.PI);
@@ -290,7 +388,7 @@ function drawLineByRatio(ratio, ctx) {
  */
 setTimeout(function() {
   cycleActivity(true);
-}, 1000);
+}, 250);
 
 $('.overlay').hide();
 
