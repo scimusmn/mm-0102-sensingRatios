@@ -1,5 +1,3 @@
 <config>
-  <test>this is a test</test>
-  <num1 type="num">123</num1>
-  <num2 type="num">321</num2>
+  <mute_timeout type="num">600</mute_timeout>
 </config>

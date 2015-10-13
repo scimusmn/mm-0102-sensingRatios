@@ -1,4 +1,4 @@
-include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js','src/hardware.js'], function() {
+include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.js', 'src/smm_config.js'], function() {
 
   //mute the left and right audio channels.
   audio.left.mute();
@@ -16,17 +16,50 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js','src/hardware.js
     this.addPoint(this.mouse);
   }, false);
 
+  //set the timeout to mute the sound after a period of inactivity.
+  var muteTimeout = null;
+
+  var resetMuteTimeout = function() {
+    clearTimeout(muteTimeout);
+    muteTimeout = setTimeout(function() {
+      audio.left.mute();
+      audio.right.mute();
+    }, µ('config-file').mute_timeout);
+  };
+
+  //set the callback for volume control from the pot.
+
+  µ('#volumeControl').old = 0;
+  µ('#volumeControl').onData = function(val) {
+    if (Math.abs(val - this.oldVol) > .02) {
+      audio.left.setVolume(val);
+      audio.right.setVolume(val);
+      resetMuteTimeout();
+      this.oldVol = val;
+    }
+  };
+
+  //callbacks for hardware buttons
+
+  µ('#resetButton').onData = function(val) {
+    if (val) resetForNewUser();
+  };
+
+  µ('#cycleButton').onData = function(val) {
+    if (val) cycleActivity();
+  };
+
   //when the window resizes, resize the canvas.
   window.onresize = function() {
     µ('#trace').height = µ('#trace').clientHeight;
     µ('#trace').width = µ('#trace').clientWidth;
-  }
+  };
 
   //when the trace receives a new point, update the audio tones.
   µ('#trace').onNewPoint = function() {
-    audio.left.changeFrequency(1-µ('#trace').lastPoint().y,1/µ('#trace').range.y.divs);
-    audio.right.changeFrequency(µ('#trace').lastPoint().x,1/µ('#trace').range.x.divs);
-
+    resetMuteTimeout();
+    audio.left.changeFrequency(1 - µ('#trace').lastPoint().y, 1 / µ('#trace').range.y.divs);
+    audio.right.changeFrequency(µ('#trace').lastPoint().x, 1 / µ('#trace').range.x.divs);
 
     updateFrequencyReadouts(Math.round(audio.left.getFrequency()), Math.round(audio.right.getFrequency()));
 
@@ -39,12 +72,11 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js','src/hardware.js
   //set the canvas to redraw at 30fps
   setInterval(function() {µ('#trace').draw();}, 1000 / 30);
 
-
   // Set up key listeners (for debug w/o Arduino)
-  document.onkeypress = function (e) {
+  document.onkeypress = function(e) {
     var keyCode = (window.event) ? e.which : e.keyCode;
 
-    if (keyCode === 97){ // 'a' = Screen activity button
+    if (keyCode === 97) { // 'a' = Screen activity button
 
       cycleActivity();
 
@@ -53,8 +85,8 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js','src/hardware.js
       resetForNewUser();
 
     } else if (keyCode === charCode('m')) { // 'm' = mute
-      if(audio.left.muted) audio.left.unmute(),audio.right.unmute();
-      else audio.left.mute(),audio.right.mute();
+      if (audio.left.muted) audio.left.unmute(), audio.right.unmute();
+      else audio.left.mute(), audio.right.mute();
 
     }
   };

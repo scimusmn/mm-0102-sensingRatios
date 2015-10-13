@@ -5,6 +5,7 @@
     <hard-ware serialport="usbmodem">
       <in-put type="analog" pin="0" report="30" low="0" hi="1023" result="#trace.newX"></in-put>
       <in-put type="analog" pin="1" report="30" low="1023" hi="0" result="#trace.newY"></in-put>
+      <in-put id="volumeControl" type="analog" pin="2" report="30" low="0" hi="1023"></in-put>
       <in-put id="resetButton" type="digital" debounce="100" pin="2"></in-put>
       <in-put id="cycleButton" type="digital" debounce="100" pin="3"></in-put>
     </hard-ware>

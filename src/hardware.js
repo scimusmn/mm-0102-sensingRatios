@@ -14,7 +14,7 @@ include([], function() {
 
     this.send = function(msg) {};
 
-    this.openSerialPort = function(sp,cb) {
+    this.openSerialPort = function(sp, cb) {
       this.onSerialOpen = cb;
       this.serialport = sp;
       console.log('Attempting connection to ' + sp + '...');
@@ -22,42 +22,42 @@ include([], function() {
     };
 
     this.connect = function() {
-      var self = this;
+      var _this = this;
       if ('WebSocket' in window) {
         ws = new WebSocket(this.address); //ws://echo.websocket.org is the default testing server
         ws.onopen = function()
         {
           // Web Socket is connected, send data using send()
-          clearInterval(self.connectInterval);
-          if (self.serialport.length)
-            self.openSerialPort(self.serialport, self.onArduinoConnect);
-          self.connectCallback();
+          clearInterval(_this.connectInterval);
+          if (_this.serialport.length)
+            _this.openSerialPort(_this.serialport, _this.onArduinoConnect);
+          _this.connectCallback();
           ws.onmessage = function(evt) {
             var spl = evt.data.split('=');
             if (spl[0] == 'sp') {
               if (spl[1] == 'err')
-                console.log(self.serialport + ' does not exist');
+                console.log(_this.serialport + ' does not exist');
               else if (spl[1] == 'ack') {
-                setTimeout(self.onSerialOpen, 2000);
+                setTimeout(_this.onSerialOpen, 2000);
                 console.log('Connection successful');
               }
-            } else self.messageCallback(evt);
+            } else _this.messageCallback(evt);
           };
         };
 
         ws.onerror = function(error) {
-          //if ('WebSocket' in window) self.connectInterval = setInterval(self.connect.bind(self),2000);
+          //if ('WebSocket' in window) _this.connectInterval = setInterval(_this.connect.bind(_this),2000);
         }
 
         ws.onclose = function() {
-          //self.connectInterval = setInterval(self.connect.bind(self),2000);
+          //_this.connectInterval = setInterval(_this.connect.bind(_this),2000);
         };
 
         this.send = function(msg) {
           ws.send(msg);
         }
       }    else {
-        clearInterval(self.connectInterval);
+        clearInterval(_this.connectInterval);
         console.log('Websocket not supported');
       }
     }
@@ -68,7 +68,7 @@ include([], function() {
   ////////////////////////////////////////////////
 
   var webArduino = inheritFrom(HTMLElement, function(){
-    var self= this;
+    var _this= this;
     this.digiHandlers =[];
     this.anaHandlers =[];
     var START = 128;
@@ -91,13 +91,13 @@ include([], function() {
           var pin = ((chr & 56)>>3);        //extract the pin number
           var val = ((chr & 7)<<7)+(msg.charCodeAt(++i)&127); //extract the value
           //console.log(pin);
-          if(typeof self.anaHandlers[pin] == 'function') self.anaHandlers[pin](pin,val);
+          if(typeof _this.anaHandlers[pin] == 'function') _this.anaHandlers[pin](pin,val);
         }
         else if(chr&(START+DIGI_READ)){      //if the packet is digitalRead
           var pin = ((chr & 62)>>1);
           var val = chr&1;
           //console.log(pin);
-          if(typeof self.digiHandlers[pin] == 'function') self.digiHandlers[pin](val);
+          if(typeof _this.digiHandlers[pin] == 'function') _this.digiHandlers[pin](val);
         }
       }
     };
@@ -158,14 +158,14 @@ include([], function() {
       inputPins.forEach(function(item, i, arr) {
         if(item.type === 'analog'){
           //console.log(item.pin);
-          self.analogReport(item.pin,item.report,function (pin,val) {
+          _this.analogReport(item.pin,item.report,function (pin,val) {
             //console.log(pin + ' is ' + val);
             if(item.target)
               item.target.newValue(map(val,item.min,item.max,0,1),item.which);
           });
         }
         else if(item.type === 'digital'){
-          self.watchPin(item.pin,function (pin,val){
+          _this.watchPin(item.pin,function (pin,val){
             item.target[item.which](val);
           });
         }
@@ -173,8 +173,8 @@ include([], function() {
     }
 
     this.createdCallback = function () {
-      var self = this;
-      µ('web-socket').onArduinoConnect = this.connectCB.bind(self);
+      var _this = this;
+      µ('web-socket').onArduinoConnect = this.connectCB.bind(_this);
       this.ws = µ('web-socket');
       if(typeof µ('web-socket') === 'object')
         µ('web-socket').customCallback = this.onMessage.bind(this);
@@ -185,6 +185,8 @@ include([], function() {
   ////////////////////////////////////////////////
   //  custom elements
   ////////////////////////////////////////////////
+
+  // create the elements used for hardware input
 
   var inPut = inheritFrom(HTMLElement, function() {
     this.onData = function(val) {
@@ -198,8 +200,9 @@ include([], function() {
         this.min = µ('|>low',this);
         this.max = µ('|>hi',this);
         this.report = this.getAttribute('report');
-        var result = this.getAttribute('result').split('.');
-        if (result.length > 1) {
+        var result = this.getAttribute('result');
+        if (result&&result.length > 1) {
+          result = result.split('.');
           this.target = µ(result[0]);
           this.which = result[1];
         }
@@ -220,6 +223,8 @@ include([], function() {
   });
 
   document.registerElement('in-put', inPut);
+
+  // create the elements used for hardware output
 
   var outPut = inheritFrom(HTMLElement, function() {
     this.mode = true;
@@ -242,7 +247,13 @@ include([], function() {
 
   document.registerElement('out-put', outPut);
 
+  /////////////////////////////////////////////////////////////
+  // create the hard-ware tag. inherit the functions from the arduino,
+  // in order to send the control information to the arduino.
+  /////////////////////////////////////////////////////////////
+
   var hardWare = inheritFrom(webArduino, function() {
+    // function to call when the websocket server connects to the serial port.
     this.connectCB = function() {
       var _this = this;
       this.onConnect();
@@ -251,14 +262,20 @@ include([], function() {
         if(item.type === 'analog'){
           console.log(item.pin);
           _this.analogReport(item.pin,item.report,function (pin,val) {
+            if(item.min&&item.max) val = map(val,item.min,item.max,0,1);
             if(!item.target) item.onData(val);
-            else item.target[item.which](map(val,item.min,item.max,0,1));
+            else item.target[item.which](val);
           });
         }
         else if(item.type === 'digital'){
           _this.watchPin(item.pin,function (pin,val){
-            if(!item.target) item.onData(val);
-            else item.target[item.which](val);
+            if(!item.hit){
+              if(!item.target) item.onData(val);
+              else item.target[item.which](val);
+
+              item.hit = true;
+              item.dbTimer = setTimeout(function () {item.hit = false; },item.debounce);
+            }
           });
         }
       });
