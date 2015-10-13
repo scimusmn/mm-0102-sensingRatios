@@ -7,17 +7,29 @@ include([],function () {
     var gain = audio.createGain();
     var panNode = audio.createStereoPanner();
 
+    /*var real = new Float32Array(4);
+    var imag = new Float32Array(4);
+
+    real[0] = 0;
+    imag[0] = 0;
+    real[1] = .1;
+    imag[1] = -.1;
+
+    var wave = audio.createPeriodicWave(real, imag);
+
+    osc.setPeriodicWave(wave);*/
     osc.frequency.value = 50;
+    osc.type = 'sine';
 
 
     gain.gain.value = 1;
 
     //sets the pan of the channel
-    panNode.pan.value = ((which=='left') ? 0 : 1);
+    panNode.pan.value = ((which=='left') ? -1 : 1);
 
-    panNode.connect(audio.destination);
-    gain.connect(panNode);
     osc.connect(gain);
+    gain.connect(panNode);
+    panNode.connect(audio.destination);
     osc.start(0);
 
 
@@ -41,6 +53,7 @@ include([],function () {
     }
 
     this.unmute = function () {
+      this.muted=false;
       gain.gain.value = this.volume*this.volScale;
     }
 

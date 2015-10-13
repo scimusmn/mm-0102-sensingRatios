@@ -95,6 +95,22 @@ include(["src/pointStack.js"],function () {
 			}
 		};
 
+		this.newX = function(val){
+			this.newPoint.x.val = val;
+			this.newPoint.x.new = true;
+			if(this.newPoint.x.new&&this.newPoint.y.new){
+				this.addPoint({x:this.newPoint.x.val,y:this.newPoint.y.val});
+			}
+		}
+
+		this.newY = function(val){
+			this.newPoint.y.val = val;
+			this.newPoint.y.new = true;
+			if(this.newPoint.x.new&&this.newPoint.y.new){
+				this.addPoint({x:this.newPoint.x.val,y:this.newPoint.y.val});
+			}
+		}
+
 		this.lastPoint = function(){
 			if(this.points.length) return {x:this.convert(this.points.last().x,"x"),y:this.convert(this.points.last().y,"y")};
 		}

@@ -1,23 +1,17 @@
 <html>
   <head>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/main.css"></link>
     <script src="src/smmInclude.js" main="src/app.js"></script>
-    <web-socket serialport="usbmodem"></web-socket>
-		<web-arduino>
-			<input-pin type="analog" pin="0" report="30" low="0" hi="1023" result="#trace.x"/>
-			<input-pin type="analog" pin="1" report="30" low="0" hi="1023" result="#trace.y"/>
-			<input-pin type="digital" pin="3" result="#trace.y"/>
-		</web-arduino>
     <hard-ware serialport="usbmodem">
-      <in-put type="analog" pin="0" report="30" low="0" hi="1023" result="#trace.x"/>
-      <in-put type="analog" pin="1" report="30" low="0" hi="1023" result="#trace.y"/>
-      <in-put id="resetButton" type="button" debounce="100" pin="2" />
-      <in-put id="cycleButton" type="button" debounce="100" pin="3" />
+      <in-put type="analog" pin="0" report="30" low="0" hi="1023" result="#trace.newX"></in-put>
+      <in-put type="analog" pin="1" report="30" low="1023" hi="0" result="#trace.newY"></in-put>
+      <in-put id="resetButton" type="digital" debounce="100" pin="2"></in-put>
+      <in-put id="cycleButton" type="digital" debounce="100" pin="3"></in-put>
     </hard-ware>
     <config-file file="data/config.xml"></config-file>
   </head>
   <body>
-    <canvas is="smm-graph" id="trace" numPoints="200" xMin="0" xMax="1" yMin="0" yMax="1" xDiv="10" yDiv="10" flip=""></canvas>
+    <canvas is="smm-graph" id="trace" numPoints="200" xMin="0" xMax="1" yMin="0" yMax="1" xDiv="8" yDiv="8" flip=""></canvas>
 
 
      <!-- ToolTips -->

@@ -1,8 +1,8 @@
-include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/audio.js','src/hardware.js'], function() {
+include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js','src/hardware.js'], function() {
 
   //mute the left and right audio channels.
-  audio.left.unmute();
-  audio.right.unmute();
+  audio.left.mute();
+  audio.right.mute();
 
   //on mouse move over the trace, update the mouse position
   µ('#trace').addEventListener('mousemove', function(evt) {
@@ -24,11 +24,11 @@ include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/au
 
   //when the trace receives a new point, update the audio tones.
   µ('#trace').onNewPoint = function() {
-    audio.left.changeFrequency(1-µ('#trace').lastPoint().y,.125);
-    audio.right.changeFrequency(µ('#trace').lastPoint().x,.125);
+    audio.left.changeFrequency(1-µ('#trace').lastPoint().y,1/µ('#trace').range.y.divs);
+    audio.right.changeFrequency(µ('#trace').lastPoint().x,1/µ('#trace').range.x.divs);
 
 
-    updateFrequencyReadouts(audio.left.getFrequency(), audio.right.getFrequency());
+    updateFrequencyReadouts(Math.round(audio.left.getFrequency()), Math.round(audio.right.getFrequency()));
 
   };
 
@@ -42,15 +42,19 @@ include(['src/arduinoControl.js','src/smm_graph.js', 'src/interface.js', 'src/au
 
   // Set up key listeners (for debug w/o Arduino)
   document.onkeypress = function (e) {
-      var keyCode = (window.event) ? e.which : e.keyCode;
+    var keyCode = (window.event) ? e.which : e.keyCode;
 
-      if (keyCode === 97){ // 'a' = Screen activity button
+    if (keyCode === 97){ // 'a' = Screen activity button
 
-        cycleActivity();
+      cycleActivity();
 
-      } else if (keyCode === 110) { // 'n' = New user button
+    } else if (keyCode === 110) { // 'n' = New user button
 
-        resetForNewUser();
+      resetForNewUser();
+
+    } else if (keyCode === charCode('m')) { // 'm' = mute
+      if(audio.left.muted) audio.left.unmute(),audio.right.unmute();
+      else audio.left.mute(),audio.right.mute();
 
     }
   };
