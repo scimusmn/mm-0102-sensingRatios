@@ -153,7 +153,7 @@ include(['src/pointStack.js'], function() {
       var ctx = this.getContext('2d');
       ctx.lineWidth = this.gridWidth;
       ctx.strokeStyle = this.gridColor;
-      for (var i = 0; i < this.range.x.divs; i++) {
+      for (var i = 0; i <= this.range.x.divs; i++) {
         ctx.beginPath();
         ctx.moveTo(i * this.width / this.range.x.divs, 0);
         ctx.lineTo(i * this.width / this.range.x.divs, this.height);
@@ -161,7 +161,7 @@ include(['src/pointStack.js'], function() {
         ctx.stroke();
       }
 
-      for (var i = 0; i < this.range.y.divs; i++) {
+      for (var i = 0; i <= this.range.y.divs; i++) {
         ctx.beginPath();
         ctx.moveTo(0, i * this.height / this.range.y.divs);
         ctx.lineTo(this.width, i * this.height / this.range.y.divs);
