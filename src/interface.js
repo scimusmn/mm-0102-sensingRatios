@@ -12,6 +12,7 @@ var gOffsetY = $('#trace').offset().top;
 
 // Hook into graph drawing loop
 graph.customFGDraw = doGraphDrawing;
+graph.customBGDraw = doBackgroundDrawing;
 var overlayWidth = 5;
 var overlayColor = 'rgba(255,0,0,.3)';
 
@@ -104,6 +105,10 @@ function resetForNewUser() {
 /**
  * Graph Drawing
  */
+function doBackgroundDrawing() {
+
+}
+
 function doGraphDrawing() {
 
   gCtx = graph.getContext('2d');
@@ -133,7 +138,7 @@ function drawCrosshair() {
 function drawGutters() {
 
   // Draw bold notches
-  // gCtx.strokeStyle = '#000';
+  // gCtx.strokeStyle = '#aaa';
   // gCtx.lineWidth = 5;
   // var notchSize = 0.1;
   // for (var i = 1; i <= graph.range.x.divs; i++) {
@@ -316,11 +321,11 @@ function drawOctaves() {
   $(tip1).css({'-webkit-transform': 'rotate(-45deg)'});
   $(tip2).css({'-webkit-transform': 'rotate(-45deg)'});
 
-  $(tip1).css('left', 650);
-  $(tip1).css('top', 444);
+  $(tip1).css('left', 630);
+  $(tip1).css('top', 425);
 
-  $(tip2).css('left', 750);
-  $(tip2).css('top', 650);
+  $(tip2).css('left', 875);
+  $(tip2).css('top', 575);
 
 };
 
