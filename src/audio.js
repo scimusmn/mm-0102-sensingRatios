@@ -7,19 +7,16 @@ include([], function() {
     var gain = audio.createGain();
     var panNode = audio.createStereoPanner();
 
-    /*var real = new Float32Array(4);
-    var imag = new Float32Array(4);
-
-    real[0] = 0;
-    imag[0] = 0;
-    real[1] = .1;
-    imag[1] = -.1;
+    /*var real = new Float32Array([0, 1, .5, 0, -.5, -1]);
+    var imag = new Float32Array([0, 1, .5, 0, -.5, 0]);
 
     var wave = audio.createPeriodicWave(real, imag);
 
-    osc.setPeriodicWave(wave);*/
+    osc.setPeriodicWave(wave)*/;
+
     osc.frequency.value = 50;
-    osc.type = 'sine';
+
+    //osc.type = 'sawtooth';
 
     gain.gain.value = 1;
 
@@ -36,6 +33,15 @@ include([], function() {
     this.volScale = 1;
     this.muted = false;
 
+    this.rampVolume = function(vol) {
+      if (Math.abs(_this.volume - vol) > .01) {
+        _this.volume += sign(vol - _this.volume) * .01;
+        gain.gain.value = _this.volume * _this.volScale;
+        clearTimeout(_this.rampTimer);
+        _this.rampTimer = setTimeout(function() {_this.rampVolume(vol);}, 1);
+      } else _this.setVolume(vol);
+    };
+
     this.getVolume = function() {
       return this.volume;
     };
@@ -47,7 +53,7 @@ include([], function() {
 
     this.mute = function() {
       this.muted = true;
-      gain.gain.value = 0;
+      this.rampVolume(0);
     };
 
     this.unmute = function() {
@@ -78,7 +84,8 @@ include([], function() {
       this.volScale = Math.pow(50. / targFreq, .7);
       if (this.volScale > 1) this.volScale = 1;
 
-      gain.gain.value = this.volume * this.volScale;
+      if (!this.muted) gain.gain.value = this.volume * this.volScale;
+      else this.rampVolume(1);
       this.setFrequency(targFreq);
     };
   };

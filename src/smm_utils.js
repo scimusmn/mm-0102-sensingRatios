@@ -6,40 +6,31 @@
 // incorporation of jquery without conflicts.
 // -@tnordberg, 10/09/2015
 
-var µ = function(id, elem) {
-	var ret;
-	var root = ((elem)?elem:document);
-	var spl = id.split(">");
-	switch(spl[0].charAt(0)){
-		/*case '#':
-			ret= root.getElementById( spl[0].substr(1) );
-			break;
-		case '.':
-			ret= root.getElementsByClassName(spl[0].substr(1) )[0];
-			break;
-		case '$':
-			ret= root.getElementsByTagName( spl[0].substr(1) )[0];
-			break;*/
-		case '|':
-			ret= root;
-			break;
-		default:
-			ret= root.querySelector( spl[0] );
-			break;
-	}
-	if(spl.length<=1) return ret;
-	else return ret.getAttribute(spl[1]);
+function µ(id, elem) {
+  var ret;
+  var root = ((elem)?elem:document);
+  var spl = id.split(">");
+  switch(spl[0].charAt(0)){
+    case '|':
+      ret = root;
+      break;
+    default:
+      ret= root.querySelector( spl[0] );
+      break;
+  }
+  if(spl.length<=1) return ret;
+  else return ret.getAttribute(spl[1]);
 };
 
 function inheritFrom(parent,addMethods){
-	var _parent = parent;
+  var _parent = parent;
   var ret = function() {
     if (_parent) {
       _parent.apply(this, arguments);
     }
   };
 
-	//console.log(_parent);
+  //console.log(_parent);
 
   ret.prototype = Object.create(_parent && _parent.prototype, {
     constructor: {
@@ -51,8 +42,8 @@ function inheritFrom(parent,addMethods){
   });
   if (_parent) ret.__proto__ = _parent;
 
-	if(typeof addMethods === 'function')
-		addMethods.call(ret.prototype);
+  if(typeof addMethods === 'function')
+    addMethods.call(ret.prototype);
 
   return ret;
 }
@@ -70,22 +61,22 @@ Function.prototype.inherits = function (parent) {
 };
 
 function ajax(src,fxn){
- 	var http = new XMLHttpRequest();
- 	var ret =0;
+   var http = new XMLHttpRequest();
+   var ret =0;
 
- 	http.open('get', src);
- 	http.responseType = "document";
-	http.onreadystatechange = function ()
-	{
-		if (http.readyState == 4){
-			ret = http.responseXML;
-			fxn(ret);
-		}
-	}
+   http.open('get', src);
+   http.responseType = "document";
+  http.onreadystatechange = function ()
+  {
+    if (http.readyState == 4){
+      ret = http.responseXML;
+      fxn(ret);
+    }
+  }
 
-	http.send(null);
+  http.send(null);
 
-	return ret;
+  return ret;
  }
 
 /***************************************
@@ -124,7 +115,7 @@ function fociiActions() {
 
 
 function b64toBlobURL(b64Data, contentType, sliceSize) {
-	var parts = b64Data.match(/data:([^;]*)(;base64)?,([0-9A-Za-z+/]+)/);
+  var parts = b64Data.match(/data:([^;]*)(;base64)?,([0-9A-Za-z+/]+)/);
     contentType = contentType || '';
     sliceSize = sliceSize || 512;
 
@@ -148,11 +139,11 @@ function b64toBlobURL(b64Data, contentType, sliceSize) {
 }
 
 var revokeBlobURL = function(URL){
-	window.URL.revokeObjectURL(URL);
+  window.URL.revokeObjectURL(URL);
 }
 
 var charCode = function(string){
-	return string.charCodeAt(0);
+  return string.charCodeAt(0);
 }
 
 function sign(x) {
@@ -160,7 +151,7 @@ function sign(x) {
 }
 
 function constrain(num, a, b){
-	return num = Math.min(Math.max(num, a), b);
+  return num = Math.min(Math.max(num, a), b);
 }
 
 function degToRad(d) {
@@ -182,23 +173,23 @@ function extractNumber(value)
 
 
 function bitRead(num,pos){
-	return (num&Math.pow(2,pos))>>pos;
+  return (num&Math.pow(2,pos))>>pos;
 }
 
 function distance(p1,p2){
-	return Math.sqrt(Math.pow((p2.x-p1.x),2)+Math.pow((p2.y-p1.y),2));
+  return Math.sqrt(Math.pow((p2.x-p1.x),2)+Math.pow((p2.y-p1.y),2));
 }
 
 Array.prototype.min = function(){
-	return Math.min.apply({},this);
+  return Math.min.apply({},this);
 }
 
 Array.prototype.max = function(){
-	return Math.max.apply({},this);
+  return Math.max.apply({},this);
 }
 
 Array.prototype.last = function(){
-	return this[this.length-1];
+  return this[this.length-1];
 }
 
 function getPos(el) {
@@ -208,42 +199,42 @@ function getPos(el) {
 }
 
 function aveCont(points){
-	if(points===undefined) points=5;
-	var samps = [];
-	this.ave=0;
-	var ind=0;
-	var tot=0;
-	for(var i=0; i<points; i++){
-		samps.push(0.0);
-	}
+  if(points===undefined) points=5;
+  var samps = [];
+  this.ave=0;
+  var ind=0;
+  var tot=0;
+  for(var i=0; i<points; i++){
+    samps.push(0.0);
+  }
 
-	this.changeNumSamps = function(num){
-		samps.length=0;
-		for(var i=0; i<num; i++){
-			samps.push(0.0);
-		}
-	}
+  this.changeNumSamps = function(num){
+    samps.length=0;
+    for(var i=0; i<num; i++){
+      samps.push(0.0);
+    }
+  }
 
-	this.addSample=function(val){
-		tot-=samps[ind];
-		samps[ind]=val;
-		tot+=val;
-		this.ave=tot/samps.length;
-		ind=(ind+1)%samps.length;
-		return this.ave;
-	}
+  this.addSample=function(val){
+    tot-=samps[ind];
+    samps[ind]=val;
+    tot+=val;
+    this.ave=tot/samps.length;
+    ind=(ind+1)%samps.length;
+    return this.ave;
+  }
 
-	return this;
+  return this;
 }
 
 function map(val,inMin,inMax,outMin,outMax){
-	return (val-inMin)*(outMax-outMin)/(inMax-inMin)+outMin;
+  return (val-inMin)*(outMax-outMin)/(inMax-inMin)+outMin;
 }
 
 function clamp(val,Min,Max) {
-	with (Math){
-		return max(Min,min(val,Max));
-	}
+  with (Math){
+    return max(Min,min(val,Max));
+  }
 }
 
 function zeroPad(num, size) {

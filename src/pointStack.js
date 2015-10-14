@@ -1,6 +1,6 @@
 function pointStack(maxPnts) {
 
-  var self = this;
+  var _this = this;
   var points = [];
   var bAver = true;
 
@@ -18,8 +18,8 @@ function pointStack(maxPnts) {
 
   points.addPoint = function(pnt) {
 
-  	// TODO: Give this point an accuracy score
-  	// based on how close to the current pattern it is.
+    // TODO: Give this point an accuracy score
+    // based on how close to the current pattern it is.
     var accuracy = 0;
     var aColor = this.getAccuracyColor(accuracy);
 
@@ -41,16 +41,18 @@ function pointStack(maxPnts) {
 
         if (points.length >= maxPnts) {
 
-        	// Remove oldest point
+          // Remove oldest point
           points.splice(0, 1);
 
         }
 
+        return true;
       }
 
     } else {
 
       points.push({x:pnt.x, y:pnt.y, color:aColor});
+      return false;
 
     }
 
@@ -58,11 +60,7 @@ function pointStack(maxPnts) {
 
   points.hasMoved = function(pnt) {
 
-    if (Math.abs(pnt.x - points.last().x) > .01 || Math.abs(pnt.y - points.last().y) > .01) {
-      return true;
-    } else {
-      return false;
-    }
+    return (Math.abs(pnt.x - points.last().x) > .01 || Math.abs(pnt.y - points.last().y) > .01);
 
   };
 

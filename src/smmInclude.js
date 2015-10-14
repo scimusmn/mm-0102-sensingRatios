@@ -17,17 +17,17 @@ var includeManager = new function() {
   this.includes = [];
 
   //record new scripts as they are added
-  this.register = function(srcs,loadFxn,src) {
+  this.register = function(srcs, loadFxn, src) {
     this.shorten(src);
     var dep = [];
     if (typeof this.includes[src] == 'object') {
       dep = this.includes[src].dependents;
     }
 
-    this.includes[src] = {src:src,srcs:srcs,loadFxn:loadFxn,done:false,dependents:dep};
+    this.includes[src] = {src:src, srcs:srcs, loadFxn:loadFxn, done:false, dependents:dep};
   };
 
-  this.addDependent = function(src,which) {
+  this.addDependent = function(src, which) {
     this.shorten(src);
     this.shorten(which);
     var dep = [];
@@ -35,7 +35,7 @@ var includeManager = new function() {
     if (this.includes.indexOf(src) >= 0) {
       dep = this.includes[src].dependents;
       done = this.includes[src].done;
-    } else this.includes[src] = {src:src,done:false,dependents:dep};
+    } else this.includes[src] = {src:src, done:false, dependents:dep};
     if (dep.indexOf(src) == -1) dep.push(which);
     this.includes[src].dependents = dep;
   };
@@ -76,7 +76,7 @@ var includeManager = new function() {
   };
 };
 
-function include(srcLocations,onLoaded) {
+function include(srcLocations, onLoaded) {
   var curScript = includeManager.shorten(document.currentScript.src);
   if (debug) console.log('These are the includes for ' + curScript);
   var numLoaded = 0;
@@ -96,7 +96,7 @@ function include(srcLocations,onLoaded) {
   var found = false;
   for (var i = 0; i < srcLocations.length; i++) {
     if (debug) console.log('-->' + srcLocations[i]);
-    scripts.forEach(function(item,index,array) {
+    scripts.forEach(function(item, index, array) {
       if (item.getAttribute('src') == srcLocations[i]) found = true;
     });
 
@@ -105,7 +105,7 @@ function include(srcLocations,onLoaded) {
       var src = includeManager.shorten(srcLocations[i]);
       scrpt.src = src;
       scrpt.addEventListener('load', loaded, false);
-      includeManager.includes[src] = {src:src,loading:true,dependents:[]};
+      includeManager.includes[src] = {src:src, loading:true, dependents:[]};
       document.head.insertBefore(scrpt, document.currentScript);
     }
 
@@ -125,6 +125,6 @@ var includer = new function() {
   this.app = this.script.getAttribute('main');
 
   // Make utils available everywhere by default
-  include(['src/smm_utils.js','src/vendor/jquery.min.js',this.app]);
+  include(['src/smm_utils.js', 'src/vendor/jquery.min.js', this.app]);
 
 };

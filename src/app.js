@@ -24,7 +24,7 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
     muteTimeout = setTimeout(function() {
       audio.left.mute();
       audio.right.mute();
-    }, µ('config-file').mute_timeout);
+    }, µ('config-file').muteTimeout);
   };
 
   //set the callback for volume control from the pot.
@@ -85,9 +85,13 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
       resetForNewUser();
 
     } else if (keyCode === charCode('m')) { // 'm' = mute
+
       if (audio.left.muted) audio.left.unmute(), audio.right.unmute();
       else audio.left.mute(), audio.right.mute();
 
+    } else if (keyCode === charCode('l')) { // 'm' = mute
+      µ('#light').write(!µ('#light').state);
     }
+
   };
 });
