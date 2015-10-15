@@ -13,7 +13,7 @@ If you are using a fresh out-of-box machine, start with the [official exhibit co
 
 Once base Boxen is successfully installed, run the custom Partner Motion install.
 
-    boxen mm_0102_sensing_ratios
+    boxen mm-0102-sensingRatios
 
 Go to System Preferences > Cursorcerer. Set "Hide idle cursor after" to 5 seconds.
 
