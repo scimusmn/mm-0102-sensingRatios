@@ -7,3 +7,15 @@ This code is offered here for example and reference. The compiled application is
 
 ## Technical highlights
 Arduino controller inputs adjust graph drawing and audio tone generation on the screen. HTML5 application, which replaced an [old version of the software written in Open Frameworks](https://github.com/scimusmn/mm-0102-sensing-ratios-old).
+
+## Install instructions
+If you are using a fresh out-of-box machine, start with the [official exhibit computer setup](http://projects.smm.org/atrium/media/node/280246).
+
+Once base Boxen is successfully installed, run the custom Partner Motion install.
+
+    boxen mm_0102_sensing_ratios
+
+After the process completes, go to System Preferences > Cursorcerer. Set "Hide idle cursor after" to 5 seconds.
+
+## Run the application
+The application should start correctly after rebooting the computer.
