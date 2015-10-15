@@ -15,7 +15,7 @@ Once base Boxen is successfully installed, run the custom Partner Motion install
 
     boxen mm_0102_sensing_ratios
 
-After the process completes, go to System Preferences > Cursorcerer. Set "Hide idle cursor after" to 5 seconds.
+Go to System Preferences > Cursorcerer. Set "Hide idle cursor after" to 5 seconds.
 
 ## Run the application
 The application should start correctly after rebooting the computer.
