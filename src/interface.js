@@ -33,12 +33,24 @@ var OVERLAY_CIRCLE = 3;
 var OVERLAY_INTERACTIVE_RATIOS = 4;
 
 // Re-usable colors
+var neutralColor = 'rgba(237, 235, 214, 0.35)';
+var redColor = 'rgba(217, 83, 30, 1)';
+var blueColor = 'rgba(0, 120, 174, 1)';
 var xAxisColor = 'rgba(255, 255, 0, 0.35)';
 var yAxisColor = 'rgba(122, 255, 122, 0.35)';
 var tipLineColor = 'rgba(0, 0, 0, 0.35)';
 
 // Default to stairs overlay
 var currentOverlayMode = OVERLAY_STAIRS;
+
+/**
+ * Set inital interface state.
+ */
+$('document').ready(initInterface);
+function initInterface() {
+  cycleActivity(true);
+  $('.overlay').hide();
+}
 
 /**
  * Update frequency readout text
@@ -128,7 +140,7 @@ function setOverlayMode(mode) {
 };
 
 function drawCrosshair() {
-  gCtx.fillStyle = '#000';
+  gCtx.fillStyle = blueColor;
   gCtx.beginPath();
   gCtx.arc(graph.mouse.x * graph.width, graph.mouse.y * graph.height, 10, 0, 2 * Math.PI);
   gCtx.fill();
@@ -427,13 +439,4 @@ function drawLineByRatio(ratio, gCtx) {
   gCtx.stroke();
 
 }
-
-/**
- * Set inital interface state.
- */
-setTimeout(function() {
-  cycleActivity(true);
-}, 350);
-
-$('.overlay').hide();
 

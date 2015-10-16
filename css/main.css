@@ -1,6 +1,11 @@
+@font-face {
+  font-family: neutra;
+  src: url('assets/fonts/NeutrafaceSlabText-Demi.otf');
+}
+
 body {
   text-align: center;
-  background-color: rgba(255, 249, 244, 1);
+  background-color: rgba(237, 235, 214, 0.35);
 }
 
 h1, h2, h3, p {
@@ -13,11 +18,11 @@ div {
 }
 
 .en {
-
+  color: rgba(217, 83, 30, 1);
 }
 
 .es {
-  color: rgba(255, 0, 0, 0.5);
+  color: rgba(0, 120, 174, 1);
 }
 
 .left {
@@ -62,7 +67,7 @@ div {
 .overlay {
   width:100%;
   height: 100%;
-  background: rgba(0, 0, 222, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   left: 0px;
   top: 0px;
 }
@@ -70,10 +75,11 @@ div {
 .dialog {
   width:33%;
   top: 30%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   padding: 50px;
   margin: auto;
   position: relative;
+  border-radius: 10px;
 }
 
 #trace{
