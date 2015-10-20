@@ -1,4 +1,4 @@
-include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.js', 'src/smm_config.js'], function() {
+include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.js', 'src/smm_config.js', 'src/vendor/CanvasSineWave.js'], function() {
 
   //mute the left and right audio channels.
   audio.left.mute();
@@ -61,7 +61,7 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
     audio.left.changeFrequency(1 - µ('#trace').lastPoint().y, 1 / µ('#trace').range.y.divs);
     audio.right.changeFrequency(µ('#trace').lastPoint().x, 1 / µ('#trace').range.x.divs);
 
-    updateFrequencyReadouts(Math.round(audio.left.getFrequency()), Math.round(audio.right.getFrequency()));
+    updateFrequencyReadouts(Math.round(audio.left.getFrequency()), Math.round(audio.right.getFrequency()), audio.left.getVolume(), audio.right.getVolume());
 
   };
 

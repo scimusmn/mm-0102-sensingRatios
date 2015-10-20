@@ -38,6 +38,16 @@ div {
   top: 150px;
 }
 
+.left_vis {
+  position: absolute;
+  left: 50px;
+}
+
+.right_vis {
+  position: absolute;
+  right: 50px;
+}
+
 .freq {
   top: 500px;
 }

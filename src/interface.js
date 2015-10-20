@@ -43,19 +43,31 @@ var tipLineColor = 'rgba(0, 0, 0, 0.35)';
 // Default to stairs overlay
 var currentOverlayMode = OVERLAY_STAIRS;
 
+// Audio visualization
+var leftSines = [];
+var rightSines = [];
+
 /**
  * Set inital interface state.
  */
 $('document').ready(initInterface);
 function initInterface() {
+
+  // Set up audio visualization
+  leftSines.push(new CanvasSineWave(document.getElementById('left_sine_1')));
+  rightSines.push(new CanvasSineWave(document.getElementById('right_sine_1')));
+
+  // Set to default activity
   cycleActivity(true);
+
+  // Hide overlay
   $('.overlay').hide();
 }
 
 /**
  * Update frequency readout text
  */
-function updateFrequencyReadouts(inLeft, inRight) {
+function updateFrequencyReadouts(inLeft, inRight, volLeft, volRight) {
 
   // Update left frequency readout
   var newLeft = zeroPad(Math.round(inLeft), zeroPadding);
@@ -64,6 +76,20 @@ function updateFrequencyReadouts(inLeft, inRight) {
   // Update right frequency readout
   var newRight = zeroPad(Math.round(inRight), zeroPadding);
   $('#fRight').text(newRight);
+
+  // Update left frequency wave
+  var leftWaveFreq = inLeft/200 + 1;
+  console.log(volLeft);
+  for (var i = 0; i < leftSines.length; i++) {
+    leftSines[i].setFrequency(leftWaveFreq);
+    // leftSines[i].setAmplitude(volLeft * 30);
+  };
+
+  var rightWaveFreq = inRight/200 + 1;
+  for (var i = 0; i < rightSines.length; i++) {
+    rightSines[i].setFrequency(rightWaveFreq);
+    // rightSines[i].setAmplitude(volRight * 30);
+  };
 
 }
 
