@@ -18,6 +18,30 @@ h1, h2, h3 {
   font-family: neutra;
 }
 
+h1 {
+  font-size: 4em;
+  margin-bottom: 0px;
+}
+
+h1.es {
+  font-size: 2.6em;
+  margin-top: 0px;
+
+}
+
+h2 {
+  font-size: 3em;
+}
+
+h3 {
+  font-size: 2.5em;
+  margin: 0px;
+}
+
+h3.es {
+  font-size: 2em;
+}
+
 p {
   font-family: avenir;
 }
@@ -44,7 +68,9 @@ div {
 
 .title {
   position: absolute;
-  top: 150px;
+  top: 0%;
+  text-align: center;
+  width:100%;
 }
 
 .left_vis {
@@ -58,7 +84,7 @@ div {
 }
 
 .freq {
-  top: 500px;
+  top:45%;
 }
 
 .freq h2 {
@@ -71,7 +97,7 @@ div {
 
 .tooltip {
   border-radius: 5px;
-  background: white;
+  /*background: white;*/
   pointer-events: none;
 }
 
@@ -82,9 +108,9 @@ div {
 }
 
 .shadow {
-  -webkit-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
+/*  -webkit-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
   -moz-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
-  box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
+  box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);*/
 }
 
 .overlay {
@@ -96,10 +122,10 @@ div {
 }
 
 .dialog {
-  width:33%;
-  top: 30%;
+  width:55%;
+  top: 20%;
   background: rgba(0, 0, 0, 0.85);
-  padding: 50px;
+  padding:100px;
   margin: auto;
   position: relative;
   border-radius: 10px;

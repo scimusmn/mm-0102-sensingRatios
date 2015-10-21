@@ -36,11 +36,9 @@ var OVERLAY_INTERACTIVE_RATIOS = 4;
 var neutralColor = 'rgba(237, 235, 214, 0.35)';
 var redColor = 'rgba(217, 83, 30, 1)';
 var blueColor = 'rgba(0, 120, 174, 1)';
-var greenColor = 'rgba(217, 83, 30, 1)';
-var orangeColor = 'rgba(217-83-30, 1)';
-var xAxisColor = 'rgba(255, 255, 0, 0.35)';
-var yAxisColor = 'rgba(122, 255, 122, 0.35)';
-var tipLineColor = 'rgba(0, 0, 0, 0.35)';
+var xAxisColor = 'rgba(118, 86, 154, 1)';
+var yAxisColor = 'rgba(99, 172, 62, 1)';
+var tipLineColor = 'rgba(0, 0, 0, 0.4)';
 
 // Default to stairs overlay
 var currentOverlayMode = OVERLAY_STAIRS;
@@ -56,9 +54,10 @@ $('document').ready(initInterface);
 function initInterface() {
 
   // Set up audio visualization
-  var options = {resolution:1, strokeWidth:10};
-  leftSines.push(new CanvasSineWave(document.getElementById('left_sine_1'), options));
-  rightSines.push(new CanvasSineWave(document.getElementById('right_sine_1'), options));
+  var lOptions = {resolution:1, strokeWidth:10, color: xAxisColor};
+  var rOptions = {resolution:1, strokeWidth:10, color: yAxisColor};
+  leftSines.push(new CanvasSineWave(document.getElementById('left_sine_1'), lOptions));
+  rightSines.push(new CanvasSineWave(document.getElementById('right_sine_1'), rOptions));
 
   // Set to default activity
   cycleActivity(true);
@@ -125,8 +124,8 @@ function cycleActivity(reset) {
   }
 
   // Show corresponding titles
-  $('.en.title').text(titles[currentActivity].en);
-  $('.es.title').text(titles[currentActivity].es);
+  $('.title .en').text(titles[currentActivity].en);
+  $('.title .es').text(titles[currentActivity].es);
 
   // Swap in new code and visual
   $('#activities_container .activity').hide();
@@ -344,11 +343,11 @@ function drawRatios() {
   $(tip1).css({'-webkit-transform': 'rotate(-63deg)'});
   $(tip2).css({'-webkit-transform': 'rotate(-26deg)'});
 
-  $(tip1).css('left', 550);
-  $(tip1).css('top', 444);
+  $(tip1).css('left', 720);
+  $(tip1).css('top', 470);
 
-  $(tip2).css('left', 800);
-  $(tip2).css('top', 700);
+  $(tip2).css('left', 1000);
+  $(tip2).css('top', 660);
 
 };
 
@@ -375,11 +374,11 @@ function drawOctaves() {
   $(tip1).css({'-webkit-transform': 'rotate(-45deg)'});
   $(tip2).css({'-webkit-transform': 'rotate(-45deg)'});
 
-  $(tip1).css('left', 630);
-  $(tip1).css('top', 425);
+  $(tip1).css('left', 680);
+  $(tip1).css('top', 480);
 
-  $(tip2).css('left', 875);
-  $(tip2).css('top', 575);
+  $(tip2).css('left', 910);
+  $(tip2).css('top', 620);
 
 };
 

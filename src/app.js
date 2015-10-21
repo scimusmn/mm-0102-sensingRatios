@@ -68,7 +68,8 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
 
   //set the trace to fade in the window
   µ('#trace').fade = true;
-  µ('#trace').lineColor = '#f00';
+  µ('#trace').lineColor = 'rgba(0, 120, 174, 1)';
+
 
   //set the canvas to redraw at 30fps
   setInterval(function() {
