@@ -36,6 +36,8 @@ var OVERLAY_INTERACTIVE_RATIOS = 4;
 var neutralColor = 'rgba(237, 235, 214, 0.35)';
 var redColor = 'rgba(217, 83, 30, 1)';
 var blueColor = 'rgba(0, 120, 174, 1)';
+var greenColor = 'rgba(217, 83, 30, 1)';
+var orangeColor = 'rgba(217-83-30, 1)';
 var xAxisColor = 'rgba(255, 255, 0, 0.35)';
 var yAxisColor = 'rgba(122, 255, 122, 0.35)';
 var tipLineColor = 'rgba(0, 0, 0, 0.35)';
@@ -54,8 +56,9 @@ $('document').ready(initInterface);
 function initInterface() {
 
   // Set up audio visualization
-  leftSines.push(new CanvasSineWave(document.getElementById('left_sine_1')));
-  rightSines.push(new CanvasSineWave(document.getElementById('right_sine_1')));
+  var options = {resolution:1, strokeWidth:10};
+  leftSines.push(new CanvasSineWave(document.getElementById('left_sine_1'), options));
+  rightSines.push(new CanvasSineWave(document.getElementById('right_sine_1'), options));
 
   // Set to default activity
   cycleActivity(true);
@@ -67,7 +70,7 @@ function initInterface() {
 /**
  * Update frequency readout text
  */
-function updateFrequencyReadouts(inLeft, inRight, volLeft, volRight) {
+function updateFrequencyReadouts(inLeft, inRight) {
 
   // Update left frequency readout
   var newLeft = zeroPad(Math.round(inLeft), zeroPadding);
@@ -78,17 +81,30 @@ function updateFrequencyReadouts(inLeft, inRight, volLeft, volRight) {
   $('#fRight').text(newRight);
 
   // Update left frequency wave
-  var leftWaveFreq = inLeft/200 + 1;
-  console.log(volLeft);
+  var leftWaveFreq = inLeft / 200 + 0.5;
   for (var i = 0; i < leftSines.length; i++) {
     leftSines[i].setFrequency(leftWaveFreq);
-    // leftSines[i].setAmplitude(volLeft * 30);
+
   };
 
-  var rightWaveFreq = inRight/200 + 1;
+  var rightWaveFreq = inRight / 200 + 0.5;
   for (var i = 0; i < rightSines.length; i++) {
     rightSines[i].setFrequency(rightWaveFreq);
-    // rightSines[i].setAmplitude(volRight * 30);
+  };
+
+}
+
+/**
+ * Update amplitude of sine waves
+ */
+function updateAmplitudes(volLeft, volRight) {
+
+  for (var i = 0; i < leftSines.length; i++) {
+    leftSines[i].setAmplitude(volLeft * 30);
+  };
+
+  for (var i = 0; i < rightSines.length; i++) {
+    rightSines[i].setAmplitude(volRight * 30);
   };
 
 }

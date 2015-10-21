@@ -1,6 +1,11 @@
 @font-face {
   font-family: neutra;
-  src: url('assets/fonts/NeutrafaceSlabText-Demi.otf');
+  src: url('./fonts/NeutrafaceSlabText-Demi.otf');
+}
+
+@font-face {
+  font-family: avenir;
+  src: url('./fonts/Avenir-Heavy.ttf');
 }
 
 body {
@@ -8,9 +13,13 @@ body {
   background-color: rgba(237, 235, 214, 0.35);
 }
 
-h1, h2, h3, p {
+h1, h2, h3 {
   color: rgba(44, 44, 44, 1);
-  font-family: 'sans', 'helvetica';
+  font-family: neutra;
+}
+
+p {
+  font-family: avenir;
 }
 
 div {
@@ -52,6 +61,10 @@ div {
   top: 500px;
 }
 
+.freq h2 {
+  font-family: avenir;
+}
+
 .units {
   font-size: 0.5em;
 }
@@ -69,15 +82,15 @@ div {
 }
 
 .shadow {
-  -webkit-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.5);
-  -moz-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.5);
-  box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
+  -moz-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
+  box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
 }
 
 .overlay {
   width:100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.15);
   left: 0px;
   top: 0px;
 }
@@ -85,7 +98,7 @@ div {
 .dialog {
   width:33%;
   top: 30%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.85);
   padding: 50px;
   margin: auto;
   position: relative;
@@ -94,9 +107,9 @@ div {
 
 #trace{
   position:absolute;
-  width:90vmin;
-  height:90vmin;
-  top:5%;
+  width:75vmin;
+  height:75vmin;
+  top:20%;
   margin: 0 auto;
   left:0;
   right:0;

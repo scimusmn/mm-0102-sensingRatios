@@ -36,6 +36,7 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
       audio.right.setVolume(val);
       resetMuteTimeout();
       this.oldVol = val;
+
     }
   };
 
@@ -61,7 +62,7 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
     audio.left.changeFrequency(1 - µ('#trace').lastPoint().y, 1 / µ('#trace').range.y.divs);
     audio.right.changeFrequency(µ('#trace').lastPoint().x, 1 / µ('#trace').range.x.divs);
 
-    updateFrequencyReadouts(Math.round(audio.left.getFrequency()), Math.round(audio.right.getFrequency()), audio.left.getVolume(), audio.right.getVolume());
+    updateFrequencyReadouts(Math.round(audio.left.getFrequency()), Math.round(audio.right.getFrequency()));
 
   };
 
@@ -70,7 +71,14 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
   µ('#trace').lineColor = '#f00';
 
   //set the canvas to redraw at 30fps
-  setInterval(function() {µ('#trace').draw();}, 1000 / 30);
+  setInterval(function() {
+
+    µ('#trace').draw();
+
+    // Update audio visualizers
+    updateAmplitudes(audio.left.getVolume(), audio.right.getVolume());
+
+  }, 1000 / 30);
 
   // Set up key listeners (for debug w/o Arduino)
   document.onkeypress = function(e) {
