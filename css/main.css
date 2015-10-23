@@ -75,12 +75,28 @@ div {
 
 .left_vis {
   position: absolute;
-  left: 50px;
+  left: 9%;
+  top: 60%;
 }
 
 .right_vis {
   position: absolute;
-  right: 50px;
+  right: 10%;
+  top: 65%;
+}
+
+.h-flip{
+  -moz-transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+
+.rot-90{
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+  transform: rotate(90deg);
 }
 
 .freq {
@@ -89,6 +105,7 @@ div {
 
 .freq h2 {
   font-family: avenir;
+  margin-top: 0px;
 }
 
 .units {
@@ -97,7 +114,6 @@ div {
 
 .tooltip {
   border-radius: 5px;
-  /*background: white;*/
   pointer-events: none;
 }
 
@@ -105,27 +121,29 @@ div {
   margin: 0px 10px;
   padding: 10px;
   white-space: nowrap;
+  font-size: 1.6em;
+  line-height: 0.5em;
 }
 
 .shadow {
-/*  -webkit-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
+  -webkit-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
   -moz-box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
-  box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);*/
+  box-shadow: 2px 2px 8px -1px rgba(0,0,0,0.4);
 }
 
 .overlay {
   width:100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.3);
   left: 0px;
   top: 0px;
 }
 
 .dialog {
-  width:55%;
-  top: 20%;
+  width:40%;
+  top: 10%;
   background: rgba(0, 0, 0, 0.85);
-  padding:100px;
+  padding:140px;
   margin: auto;
   position: relative;
   border-radius: 10px;

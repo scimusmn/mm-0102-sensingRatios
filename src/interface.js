@@ -14,7 +14,7 @@ var gOffsetY = $('#trace').offset().top;
 graph.customFGDraw = doGraphDrawing;
 graph.customBGDraw = doBackgroundDrawing;
 var overlayWidth = 5;
-var overlayColor = 'rgba(255,0,0,.3)';
+var tipLineWidth = 1;
 
 var tipDivs = [$('#tip1'), $('#tip2')];
 
@@ -35,10 +35,13 @@ var OVERLAY_INTERACTIVE_RATIOS = 4;
 // Re-usable colors
 var neutralColor = 'rgba(237, 235, 214, 0.35)';
 var redColor = 'rgba(217, 83, 30, 1)';
+var overlayColor = 'rgba(240, 83, 30, 0.5)';
 var blueColor = 'rgba(0, 120, 174, 1)';
-var xAxisColor = 'rgba(118, 86, 154, 1)';
-var yAxisColor = 'rgba(99, 172, 62, 1)';
-var tipLineColor = 'rgba(0, 0, 0, 0.4)';
+var xAxisColor = 'rgba(118, 86, 154, 0.6)';
+var yAxisColor = 'rgba(99, 172, 62, 0.6)';
+var xWaveColor = 'rgba(118, 86, 154, 1)';
+var yWaveColor = 'rgba(99, 172, 62, 1)';
+var tipLineColor = 'rgba(0, 0, 0, 0.8)';
 
 // Default to stairs overlay
 var currentOverlayMode = OVERLAY_STAIRS;
@@ -54,8 +57,8 @@ $('document').ready(initInterface);
 function initInterface() {
 
   // Set up audio visualization
-  var lOptions = {resolution:1, strokeWidth:10, color: xAxisColor};
-  var rOptions = {resolution:1, strokeWidth:10, color: yAxisColor};
+  var lOptions = {resolution:1, strokeWidth:10, color: yWaveColor};
+  var rOptions = {resolution:1, strokeWidth:10, color: xWaveColor};
   leftSines.push(new CanvasSineWave(document.getElementById('left_sine_1'), lOptions));
   rightSines.push(new CanvasSineWave(document.getElementById('right_sine_1'), rOptions));
 
@@ -80,15 +83,16 @@ function updateFrequencyReadouts(inLeft, inRight) {
   $('#fRight').text(newRight);
 
   // Update left frequency wave
-  var leftWaveFreq = inLeft / 200 + 0.5;
+  var leftWaveFreq = inLeft / 500 + 0.5;
   for (var i = 0; i < leftSines.length; i++) {
     leftSines[i].setFrequency(leftWaveFreq);
-
+    leftSines[i].speed = map(inLeft, 0, 6000, 0.1, 0.5 );
   };
 
-  var rightWaveFreq = inRight / 200 + 0.5;
+  var rightWaveFreq = inRight / 500 + 0.5;
   for (var i = 0; i < rightSines.length; i++) {
     rightSines[i].setFrequency(rightWaveFreq);
+    rightSines[i].speed = map(inRight, 0, 6000, 0.1, 0.5 );
   };
 
 }
@@ -181,11 +185,22 @@ function setOverlayMode(mode) {
 };
 
 function drawCrosshair() {
+
+  gCtx.save();
+
   gCtx.fillStyle = blueColor;
+
+  gCtx.shadowColor = "rgba( 0, 0, 0, 0.4 )";
+  gCtx.shadowOffsetX = 2;
+  gCtx.shadowOffsetY = 2;
+  gCtx.shadowBlur = 5;
+
   gCtx.beginPath();
-  gCtx.arc(graph.mouse.x * graph.width, graph.mouse.y * graph.height, 10, 0, 2 * Math.PI);
+  gCtx.arc(graph.mouse.x * graph.width, graph.mouse.y * graph.height, 14, 0, 2 * Math.PI);
   gCtx.fill();
   gCtx.closePath();
+
+  gCtx.restore();
 }
 
 function drawGutters() {
@@ -300,7 +315,7 @@ function drawStairs() {
   // Draw line from tip to point of interest
   gCtx.save();
   gCtx.strokeStyle = tipLineColor;
-  gCtx.lineWidth = 1;
+  gCtx.lineWidth = tipLineWidth;
   gCtx.beginPath();
   gCtx.moveTo(unison.x, unison.y);
   gCtx.lineTo(unison.x + tipOffset.x, unison.y + tipOffset.y);
@@ -317,7 +332,7 @@ function drawStairs() {
   // Draw line from tip to point of interest
   gCtx.save();
   gCtx.strokeStyle = tipLineColor;
-  gCtx.lineWidth = 1;
+  gCtx.lineWidth = tipLineWidth;
   gCtx.beginPath();
   gCtx.moveTo(octave.x, octave.y);
   gCtx.lineTo(octave.x + tipOffset.x, octave.y + tipOffset.y);
@@ -343,11 +358,11 @@ function drawRatios() {
   $(tip1).css({'-webkit-transform': 'rotate(-63deg)'});
   $(tip2).css({'-webkit-transform': 'rotate(-26deg)'});
 
-  $(tip1).css('left', 720);
-  $(tip1).css('top', 470);
+  $(tip1).css('left', 730);
+  $(tip1).css('top', 480);
 
-  $(tip2).css('left', 1000);
-  $(tip2).css('top', 660);
+  $(tip2).css('left', 1015);
+  $(tip2).css('top', 675);
 
 };
 
@@ -374,11 +389,11 @@ function drawOctaves() {
   $(tip1).css({'-webkit-transform': 'rotate(-45deg)'});
   $(tip2).css({'-webkit-transform': 'rotate(-45deg)'});
 
-  $(tip1).css('left', 680);
+  $(tip1).css('left', 648);
   $(tip1).css('top', 480);
 
-  $(tip2).css('left', 910);
-  $(tip2).css('top', 620);
+  $(tip2).css('left', 830);
+  $(tip2).css('top', 550);
 
 };
 
@@ -427,38 +442,42 @@ function drawInteractiveRatios() {
   drawLineByRatio(ratio, gCtx);
 
   var reduced = reduce(gridX, gridY);
-  var tipTxt = reduced[0] + ':' + reduced[1] + ' octave ratio';
-
-  // Draw snapped coordinate
-  gCtx.fillStyle = 'rgba(255,255,255,1)';
-  gCtx.strokeStyle = 'rgba(0,0,0,1)';
-  gCtx.lineWidth = 1;
-  gCtx.beginPath();
-  gCtx.arc(snapped.x, snapped.y, 5, 0, 2 * Math.PI);
-  gCtx.fill();
-  gCtx.stroke();
-  gCtx.closePath();
+  var tipTxt = reduced[0] + ':' + reduced[1] + ' Octave ratio';
 
   // Labels
   var tip = $('.a5.tooltip').eq(0);
   $(tip).show();
 
   var tOffsetX = 50;
-  var tOffsetY = -10;
+  var tOffsetY = 15;
+  var lOffsetX = 15;
+  var lOffsetY = 20;
   if (ratio > 1.5) {
-    tOffsetX = -150;
-    tOffsetY = -100;
+    tOffsetX = -190;
+    tOffsetY = -85;
+    lOffsetX = 135;
+    lOffsetY = 45;
   }
 
   // Draw line from tip to point of interest
-  // gCtx.save();
-  // gCtx.strokeStyle = tipLineColor;
-  // gCtx.lineWidth = 1;
-  // gCtx.beginPath();
-  // gCtx.moveTo(snapped.x, snapped.y);
-  // gCtx.lineTo(snapped.x + tOffsetX, snapped.y + tOffsetY);
-  // gCtx.stroke();
-  // gCtx.restore();
+  gCtx.save();
+  gCtx.strokeStyle = tipLineColor;
+  gCtx.lineWidth = tipLineWidth;
+  gCtx.beginPath();
+  gCtx.moveTo(snapped.x, snapped.y);
+  gCtx.lineTo(snapped.x + tOffsetX + lOffsetX, snapped.y + tOffsetY + lOffsetY);
+  gCtx.stroke();
+  gCtx.restore();
+
+  // Draw snapped coordinate
+  gCtx.fillStyle = 'rgba(255,255,255,1)';
+  gCtx.strokeStyle = 'rgba(0,0,0,0.7)';
+  gCtx.lineWidth = 1;
+  gCtx.beginPath();
+  gCtx.arc(snapped.x, snapped.y, 5, 0, 2 * Math.PI);
+  gCtx.fill();
+  gCtx.stroke();
+  gCtx.closePath();
 
   // Update text
   $(tip).children('.tiptext.en').text(tipTxt);
