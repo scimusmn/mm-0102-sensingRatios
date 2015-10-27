@@ -180,9 +180,13 @@ function doGraphDrawing() {
 
   drawGraphOverlays();
 
-  drawGutters();
+  if (typeof graph.lastPoint() != 'undefined') {
 
-  drawCrosshair();
+    drawGutters();
+
+    drawCrosshair();
+
+  }
 
 }
 
@@ -204,7 +208,7 @@ function drawCrosshair() {
   gCtx.shadowBlur = 5;
 
   gCtx.beginPath();
-  gCtx.arc(graph.mouse.x * graph.width, graph.mouse.y * graph.height, 14, 0, 2 * Math.PI);
+  gCtx.arc(graph.lastPoint().x * graph.width, graph.lastPoint().y * graph.height, 14, 0, 2 * Math.PI);
   gCtx.fill();
   gCtx.closePath();
 
@@ -213,8 +217,8 @@ function drawCrosshair() {
 
 function drawGutters() {
 
-  curPixelX = graph.mouse.x * graph.width;
-  curPixelY = graph.mouse.y * graph.height;
+  curPixelX = graph.lastPoint().x * graph.width;
+  curPixelY = graph.lastPoint().y * graph.height;
 
   // X Axis Tracker
   gCtx.strokeStyle = xAxisColor;
@@ -352,11 +356,11 @@ function drawRatios() {
   $(tip1).css({'-webkit-transform': 'rotate(-63deg)'});
   $(tip2).css({'-webkit-transform': 'rotate(-26deg)'});
 
-  $(tip1).css('left', 730);
-  $(tip1).css('top', 480);
+  $(tip1).css('left', 700);
+  $(tip1).css('top', 500);
 
-  $(tip2).css('left', 1015);
-  $(tip2).css('top', 675);
+  $(tip2).css('left', 945);
+  $(tip2).css('top', 741);
 
 };
 
@@ -414,16 +418,16 @@ function drawCircle() {
 function drawInteractiveRatios() {
 
   // Get nearest X and Y coordinate on grid
-  var gridX = Math.round(map(graph.mouse.x, 0, 1, 0, graph.range.x.divs));
-  var gridY = Math.round(map(graph.mouse.y, 1, 0, 0, graph.range.y.divs));
+  var gridX = Math.round(map(graph.lastPoint().x, 0, 1, 0, graph.range.x.divs));
+  var gridY = Math.round(map(graph.lastPoint().y, 1, 0, 0, graph.range.y.divs));
 
   // Find closest 'whole' ratio
   var ratio = gridX / gridY;
   var snapped = graph.getPixelCoords(gridX, gridY);
 
   // Exit if we aren't close enough to a snapped point
-  var mCoords = { x:graph.mouse.x * graph.width,
-                  y:graph.mouse.y * graph.height,
+  var mCoords = { x:graph.lastPoint().x * graph.width,
+                  y:graph.lastPoint().y * graph.height,
                 };
   var dist = distance(mCoords, snapped);
   if (dist > (graph.cellWidth * 0.3) || (gridX === 0 && gridY === 0)) {
@@ -518,5 +522,6 @@ function cycleSineMode() {
   }
 
 }
+
 cycleSineMode();
 

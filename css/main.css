@@ -13,6 +13,7 @@ body {
   background-color: rgba(237, 235, 214, 0.35);
   width: 1920px;
   height: 1080px;
+  overflow: hidden;
 }
 
 h1, h2, h3 {
