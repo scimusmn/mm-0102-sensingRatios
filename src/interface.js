@@ -13,7 +13,7 @@ var gOffsetY = $('#trace').offset().top;
 // Hook into graph drawing loop
 graph.customFGDraw = doGraphDrawing;
 graph.customBGDraw = doBackgroundDrawing;
-var overlayWidth = 5;
+var overlayWidth = 9;
 var tipLineWidth = 1;
 
 var tipDivs = [$('#tip1'), $('#tip2')];
@@ -46,6 +46,10 @@ var tipLineColor = 'rgba(0, 0, 0, 0.8)';
 // Default to stairs overlay
 var currentOverlayMode = OVERLAY_STAIRS;
 
+// Track location on axes
+var curPixelX = 0;
+var curPixelY = 0;
+
 // Audio visualization
 var leftSines = [];
 var rightSines = [];
@@ -57,10 +61,14 @@ $('document').ready(initInterface);
 function initInterface() {
 
   // Set up audio visualization
-  var lOptions = {resolution:1, strokeWidth:10, color: yWaveColor};
-  var rOptions = {resolution:1, strokeWidth:10, color: xWaveColor};
-  leftSines.push(new CanvasSineWave(document.getElementById('left_sine_1'), lOptions));
-  rightSines.push(new CanvasSineWave(document.getElementById('right_sine_1'), rOptions));
+  var lOptions0 = {resolution:1, strokeWidth:4, color: yWaveColor, amplitude: 8};
+  var rOptions0 = {resolution:1, strokeWidth:4, color: xWaveColor, amplitude: 8};
+  var lOptions1 = {resolution:1, strokeWidth:10, color: yWaveColor};
+  var rOptions1 = {resolution:1, strokeWidth:10, color: xWaveColor};
+  leftSines.push(new CanvasSineWave(document.getElementById('left_sine_0'), lOptions0),
+                  new CanvasSineWave(document.getElementById('left_sine_1'), lOptions1));
+  rightSines.push(new CanvasSineWave(document.getElementById('right_sine_0'), rOptions0),
+                  new CanvasSineWave(document.getElementById('right_sine_1'), rOptions1));
 
   // Set to default activity
   cycleActivity(true);
@@ -86,13 +94,13 @@ function updateFrequencyReadouts(inLeft, inRight) {
   var leftWaveFreq = inLeft / 500 + 0.5;
   for (var i = 0; i < leftSines.length; i++) {
     leftSines[i].setFrequency(leftWaveFreq);
-    leftSines[i].speed = map(inLeft, 0, 6000, 0.1, 0.5 );
+    leftSines[i].speed = map(inLeft, 0, 6000, 0.1, 0.5);
   };
 
   var rightWaveFreq = inRight / 500 + 0.5;
   for (var i = 0; i < rightSines.length; i++) {
     rightSines[i].setFrequency(rightWaveFreq);
-    rightSines[i].speed = map(inRight, 0, 6000, 0.1, 0.5 );
+    rightSines[i].speed = map(inRight, 0, 6000, 0.1, 0.5);
   };
 
 }
@@ -190,7 +198,7 @@ function drawCrosshair() {
 
   gCtx.fillStyle = blueColor;
 
-  gCtx.shadowColor = "rgba( 0, 0, 0, 0.4 )";
+  gCtx.shadowColor = 'rgba( 0, 0, 0, 0.4 )';
   gCtx.shadowOffsetX = 2;
   gCtx.shadowOffsetY = 2;
   gCtx.shadowBlur = 5;
@@ -205,37 +213,19 @@ function drawCrosshair() {
 
 function drawGutters() {
 
-  // Draw bold notches
-  // gCtx.strokeStyle = '#aaa';
-  // gCtx.lineWidth = 5;
-  // var notchSize = 0.1;
-  // for (var i = 1; i <= graph.range.x.divs; i++) {
-  //   gCtx.beginPath();
-  //   gCtx.moveTo(i * graph.cellWidth, graph.height);
-  //   gCtx.lineTo(i * graph.cellWidth, graph.height - graph.cellHeight * notchSize);
-  //   gCtx.stroke();
-  // }
-
-  // for (var i = 0; i < graph.range.y.divs; i++) {
-  //   gCtx.beginPath();
-  //   gCtx.moveTo(0, i * graph.cellHeight);
-  //   gCtx.lineTo(graph.cellWidth * notchSize, i * graph.cellHeight);
-  //   gCtx.stroke();
-  // }
-
-  var pixelX = graph.mouse.x * graph.width;
-  var pixelY = graph.mouse.y * graph.height;
+  curPixelX = graph.mouse.x * graph.width;
+  curPixelY = graph.mouse.y * graph.height;
 
   // X Axis Tracker
   gCtx.strokeStyle = xAxisColor;
   gCtx.fillStyle = xAxisColor;
   gCtx.lineWidth = graph.lineWidth;
   gCtx.beginPath();
-  gCtx.moveTo(pixelX, pixelY);
-  gCtx.lineTo(pixelX, graph.height);
+  gCtx.moveTo(curPixelX, curPixelY);
+  gCtx.lineTo(curPixelX, graph.height);
   gCtx.stroke();
   gCtx.beginPath();
-  gCtx.arc(pixelX, graph.height, 10, 0, 2 * Math.PI);
+  gCtx.arc(curPixelX, graph.height, 10, 0, 2 * Math.PI);
   gCtx.fill();
 
   // Y Axis Tracker
@@ -243,12 +233,16 @@ function drawGutters() {
   gCtx.fillStyle = yAxisColor;
   gCtx.lineWidth = graph.lineWidth;
   gCtx.beginPath();
-  gCtx.moveTo(pixelX, pixelY);
-  gCtx.lineTo(0, pixelY);
+  gCtx.moveTo(curPixelX, curPixelY);
+  gCtx.lineTo(0, curPixelY);
   gCtx.stroke();
   gCtx.beginPath();
-  gCtx.arc(0, pixelY, 10, 0, 2 * Math.PI);
+  gCtx.arc(0, curPixelY, 10, 0, 2 * Math.PI);
   gCtx.fill();
+
+  // Position sine waves on axis
+  $(rightSines[0].canvas).css('left', curPixelX + gOffsetX - 32);
+  $(leftSines[0].canvas).css('top', curPixelY + gOffsetY - 16);
 
 }
 
@@ -499,4 +493,30 @@ function drawLineByRatio(ratio, gCtx) {
   gCtx.stroke();
 
 }
+
+/**
+ * TEMP - Cycle the sine display mode.
+ */
+var sineMode = -1;
+function cycleSineMode() {
+
+  $('#left_sine_0').hide();
+  $('#right_sine_0').hide();
+  $('#left_sine_1').hide();
+  $('#right_sine_1').hide();
+
+  if (sineMode == 0) {
+    $('#left_sine_1').show();
+    $('#right_sine_1').show();
+    sineMode++;
+  } else if (sineMode == 1) {
+    $('#left_sine_0').show();
+    $('#right_sine_0').show();
+    sineMode++;
+  } else {
+    sineMode = 0;
+  }
+
+}
+cycleSineMode();
 

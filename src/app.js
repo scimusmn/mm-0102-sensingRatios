@@ -42,8 +42,18 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
 
   //callbacks for hardware buttons
 
+  // TEMP - should be removed eventually
+  var doubleBtnPress = false;
+
   µ('#resetButton').onData = function(val) {
     if (val) resetForNewUser();
+
+    // TEMP - Secret toggle for testing sine waves...
+    if (val && doubleBtnPress) cycleSineMode();
+    doubleBtnPress = true;
+    setTimeout(function () { doubleBtnPress = false; }, 500);
+    // End TEMP
+
   };
 
   µ('#cycleButton').onData = function(val) {
@@ -77,7 +87,7 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
     µ('#trace').draw();
 
     // Update audio visualizers
-    updateAmplitudes(audio.left.getVolume(), audio.right.getVolume());
+    // updateAmplitudes(audio.left.getVolume(), audio.right.getVolume());
 
   }, 1000 / 30);
 
@@ -87,11 +97,11 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
 
     if (keyCode === 97) { // 'a' = Screen activity button
 
-      cycleActivity();
+      µ('#cycleButton').onData(true);
 
     } else if (keyCode === 110) { // 'n' = New user button
 
-      resetForNewUser();
+      µ('#resetButton').onData(true);
 
     } else if (keyCode === charCode('m')) { // 'm' = mute
 
