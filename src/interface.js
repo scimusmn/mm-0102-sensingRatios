@@ -65,6 +65,7 @@ function initInterface() {
   var rOptions0 = {resolution:1, strokeWidth:4, color: xWaveColor, amplitude: 8};
   var lOptions1 = {resolution:1, strokeWidth:10, color: yWaveColor};
   var rOptions1 = {resolution:1, strokeWidth:10, color: xWaveColor};
+
   leftSines.push(new CanvasSineWave(document.getElementById('left_sine_0'), lOptions0),
                   new CanvasSineWave(document.getElementById('left_sine_1'), lOptions1));
   rightSines.push(new CanvasSineWave(document.getElementById('right_sine_0'), rOptions0),
@@ -75,6 +76,49 @@ function initInterface() {
 
   // Hide overlay
   $('.overlay').hide();
+
+  // Set initial positions of labels..
+  initLabelPositions();
+
+}
+
+/**
+ * Set initial label positions
+ */
+function initLabelPositions() {
+
+  // Stairs
+  var unison = graph.getPixelCoords(4, 4);
+  var octave = graph.getPixelCoords(4, 3);
+  var tip1 = $('.a1.tooltip').eq(0);
+  var tipOffset = {x:-50, y:-50};
+  $(tip1).css('left', unison.x + gOffsetX + tipOffset.x - $(tip1).width());
+  $(tip1).css('top', unison.y + gOffsetY + tipOffset.y - $(tip1).height());
+  var tip2 = $('.a1.tooltip').eq(1);
+  tipOffset = {x:50, y:50};
+  $(tip2).css('left', octave.x + gOffsetX + tipOffset.x - 20);
+  $(tip2).css('top', octave.y + gOffsetY + tipOffset.y - 20);
+
+  // Ratios
+  var tip1 = $('.a2.tooltip').eq(0);
+  var tip2 = $('.a2.tooltip').eq(1);
+  $(tip1).css({'-webkit-transform': 'rotate(-63deg)'});
+  $(tip2).css({'-webkit-transform': 'rotate(-26deg)'});
+  $(tip1).css('left', 700);
+  $(tip1).css('top', 500);
+  $(tip2).css('left', 945);
+  $(tip2).css('top', 741);
+
+  // Octaves
+  var tip1 = $('.a3.tooltip').eq(0);
+  var tip2 = $('.a3.tooltip').eq(1);
+  $(tip1).css({'-webkit-transform': 'rotate(-45deg)'});
+  $(tip2).css({'-webkit-transform': 'rotate(-45deg)'});
+  $(tip1).css('left', 648);
+  $(tip1).css('top', 480);
+  $(tip2).css('left', 830);
+  $(tip2).css('top', 550);
+
 }
 
 /**
@@ -307,10 +351,8 @@ function drawStairs() {
   var octave = graph.getPixelCoords(4, 3);
 
   // Labels
-  var tip1 = $('.a1.tooltip').eq(0);
-  var tipOffset = {x:-50, y:-50};
-
   // Draw line from tip to point of interest
+  var tipOffset = {x:-50, y:-50};
   gCtx.save();
   gCtx.strokeStyle = tipLineColor;
   gCtx.lineWidth = tipLineWidth;
@@ -320,14 +362,8 @@ function drawStairs() {
   gCtx.stroke();
   gCtx.restore();
 
-  // Update position
-  $(tip1).css('left', unison.x + gOffsetX + tipOffset.x - $(tip1).width());
-  $(tip1).css('top', unison.y + gOffsetY + tipOffset.y - $(tip1).height());
-
-  var tip2 = $('.a1.tooltip').eq(1);
-  tipOffset = {x:50, y:50};
-
   // Draw line from tip to point of interest
+  tipOffset = {x:50, y:50};
   gCtx.save();
   gCtx.strokeStyle = tipLineColor;
   gCtx.lineWidth = tipLineWidth;
@@ -337,10 +373,6 @@ function drawStairs() {
   gCtx.stroke();
   gCtx.restore();
 
-  // Update position
-  $(tip2).css('left', octave.x + gOffsetX + tipOffset.x - 20);
-  $(tip2).css('top', octave.y + gOffsetY + tipOffset.y - 20);
-
 };
 
 function drawRatios() {
@@ -348,19 +380,6 @@ function drawRatios() {
   // Lines
   drawLineByRatio(1 / 2, gCtx);
   drawLineByRatio(2 / 1, gCtx);
-
-  // Labels
-  var tip1 = $('.a2.tooltip').eq(0);
-  var tip2 = $('.a2.tooltip').eq(1);
-
-  $(tip1).css({'-webkit-transform': 'rotate(-63deg)'});
-  $(tip2).css({'-webkit-transform': 'rotate(-26deg)'});
-
-  $(tip1).css('left', 700);
-  $(tip1).css('top', 500);
-
-  $(tip2).css('left', 945);
-  $(tip2).css('top', 741);
 
 };
 
@@ -379,19 +398,6 @@ function drawOctaves() {
   gCtx.moveTo(0, graph.height);
   gCtx.lineTo(graph.width, 0);
   gCtx.stroke();
-
-  // Labels
-  var tip1 = $('.a3.tooltip').eq(0);
-  var tip2 = $('.a3.tooltip').eq(1);
-
-  $(tip1).css({'-webkit-transform': 'rotate(-45deg)'});
-  $(tip2).css({'-webkit-transform': 'rotate(-45deg)'});
-
-  $(tip1).css('left', 648);
-  $(tip1).css('top', 480);
-
-  $(tip2).css('left', 830);
-  $(tip2).css('top', 550);
 
 };
 
