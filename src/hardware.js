@@ -86,6 +86,72 @@ include([], function() {
     var ANA_WRITE = 96;    //pins 3,5,6,9,10,11
     var DIGI_WATCH = 112;  //pins 2-13
 
+    /*****************************************************
+     * explanation of bit packages to and from arduino
+
+     0 and 1 represent actual bits, letters are described below
+
+     For Digital Read:
+                        Byte 1
+             _______________________________
+            | 1 | 0 | 0 | D | D | 2 | 1 | 0 |
+             -------------------------------
+
+             D: bits representing pin number to read
+
+    For Digital Watch Pin on pins 2-13
+                        Byte 1
+             _______________________________
+            | 1 | 1 | 1 | 1 | D | D | D | D |
+             -------------------------------
+
+             D: bits representing the pin number (2-13) to watch
+
+        OR, for pins 14-19
+
+                        Byte 1
+             _______________________________
+            | 1 | 1 | 0 | 0 | 1 | D | D | D |
+             -------------------------------
+
+            D: bits representing the pin number (14-19 [but minus 14]) to watch
+
+    For Digital Write on pins 2-13:
+                       Byte 1
+             _______________________________
+            | 1 | 0 | 1 | P | P | P | P | S |
+             -------------------------------
+
+            P: bits representing pin number to read
+            S: bit indicating pin state
+
+    For Analog Read on pins 0-5:
+                       Byte 1
+             _______________________________
+            | 1 | 1 | 0 | 0 | 0 | P | P | P |
+             -------------------------------
+
+            P: bits representing pin number to read
+
+    For Analog Report on pins 0-5:
+                   Byte 1                                   Byte 2
+         _______________________________        _______________________________
+        | 1 | 1 | 0 | 1 | P | P | P | T |      | 0 | T | T | T | T | T | T | T |
+         -------------------------------        -------------------------------
+
+        P: bits representing pin number to read
+        T: bits representing half of the interval time between reports
+
+    For Analog Write on pins 3,5,6,9,10,11:
+                   Byte 1                                   Byte 2
+         _______________________________        _______________________________
+        | 1 | 1 | 1 | 0 | P | P | P | V |      | 0 | V | V | V | V | V | V | V |
+         -------------------------------        -------------------------------
+
+        P: bits representing pin number to read 3=0,5=1,6=2,9=3,10=4,11=5
+        V: bits representing the value to write to the pin
+    */
+
     this.ws = null;
 
     this.onMessage = function(evt) {

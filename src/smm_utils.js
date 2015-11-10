@@ -8,21 +8,21 @@
 
 function µ(id, elem) {
   var ret;
-  var root = ((elem)?elem:document);
-  var spl = id.split(">");
-  switch(spl[0].charAt(0)){
+  var root = ((elem) ? elem : document);
+  var spl = id.split('>');
+  switch (spl[0].charAt(0)) {
     case '|':
       ret = root;
       break;
     default:
-      ret= root.querySelector( spl[0] );
+      ret = root.querySelector(spl[0]);
       break;
   }
-  if(spl.length<=1) return ret;
+  if (spl.length <= 1) return ret;
   else return ret.getAttribute(spl[1]);
 };
 
-function inheritFrom(parent,addMethods){
+function inheritFrom(parent, addMethods) {
   var _parent = parent;
   var ret = function() {
     if (_parent) {
@@ -37,47 +37,46 @@ function inheritFrom(parent,addMethods){
       value: ret,
       enumerable: false,
       writable: true,
-      configurable: true
-    }
+      configurable: true,
+    },
   });
   if (_parent) ret.__proto__ = _parent;
 
-  if(typeof addMethods === 'function')
+  if (typeof addMethods === 'function')
     addMethods.call(ret.prototype);
 
   return ret;
 }
 
-Function.prototype.inherits = function (parent) {
+Function.prototype.inherits = function(parent) {
   this.prototype = Object.create(parent && parent.prototype, {
     constructor: {
       value: this,
       enumerable: false,
       writable: true,
-      configurable: true
-    }
+      configurable: true,
+    },
   });
   if (parent) this.__proto__ = parent;
 };
 
-function ajax(src,fxn){
-   var http = new XMLHttpRequest();
-   var ret =0;
+function ajax(src, fxn) {
+  var http = new XMLHttpRequest();
+  var ret = 0;
 
-   http.open('get', src);
-   http.responseType = "document";
-  http.onreadystatechange = function ()
-  {
-    if (http.readyState == 4){
+  http.open('get', src);
+  http.responseType = 'document';
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
       ret = http.responseXML;
       fxn(ret);
     }
-  }
+  };
 
   http.send(null);
 
   return ret;
- }
+}
 
 /***************************************
 these work like this:
@@ -87,7 +86,7 @@ For custom elements:
 var DateSpan = inheritFrom(HTMLSpanElement);
 
 DateSpan.prototype.createdCallback = function () {
-    this.textContent = "Today's date: " + new Date().toJSON().slice(0, 10);
+    this.textContent = 'Today's date: ' + new Date().toJSON().slice(0, 10);
   };
 
   document.registerElement('date-today', DateSpan);
@@ -110,74 +109,57 @@ function fociiActions() {
     else return self.addElement(item);
   }
 }
-
 ******************************************/
-
 
 function b64toBlobURL(b64Data, contentType, sliceSize) {
   var parts = b64Data.match(/data:([^;]*)(;base64)?,([0-9A-Za-z+/]+)/);
-    contentType = contentType || '';
-    sliceSize = sliceSize || 512;
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
 
-    var byteCharacters = atob(parts[3]);
-    var byteArrays = [];
+  var byteCharacters = atob(parts[3]);
+  var byteArrays = [];
 
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        var slice = byteCharacters.slice(offset, offset + sliceSize);
+  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    var slice = byteCharacters.slice(offset, offset + sliceSize);
 
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        var byteArray = new Uint8Array(byteNumbers);
-
-        byteArrays.push(byteArray);
+    var byteNumbers = new Array(slice.length);
+    for (var i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
     }
-    var blob = new Blob(byteArrays, {type: contentType});
-    return URL.createObjectURL(blob);
+
+    var byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+
+  var blob = new Blob(byteArrays, {type: contentType});
+  return URL.createObjectURL(blob);
 }
 
-var revokeBlobURL = function(URL){
+var revokeBlobURL = function(URL) {
   window.URL.revokeObjectURL(URL);
-}
+};
 
-var charCode = function(string){
+var charCode = function(string) {
   return string.charCodeAt(0);
-}
-
-function sign(x) {
-    return (x > 0) - (x < 0);
-}
-
-function constrain(num, a, b){
-  return num = Math.min(Math.max(num, a), b);
-}
+};
 
 function degToRad(d) {
-    // Converts degrees to radians
-    return d * 0.0174532925199432957;
+  // Converts degrees to radians
+  return d * 0.0174532925199432957;
 }
 
 function itoa(i)
 {
-   return String.fromCharCode(i);
+  return String.fromCharCode(i);
 }
 
-function extractNumber(value)
-{
-    var n = parseInt(value);
-
-    return n == null || isNaN(n) ? 0 : n;
+function bitRead(num, pos) {
+  return (num & Math.pow(2, pos)) >> pos;
 }
 
-
-function bitRead(num,pos){
-  return (num&Math.pow(2,pos))>>pos;
-}
-
-function distance(p1,p2){
-  return Math.sqrt(Math.pow((p2.x-p1.x),2)+Math.pow((p2.y-p1.y),2));
+function distance(p1, p2) {
+  return Math.sqrt(Math.pow((p2.x - p1.x), 2) + Math.pow((p2.y - p1.y), 2));
 }
 
 Array.prototype.min = function(){
@@ -237,9 +219,13 @@ function clamp(val,Min,Max) {
   }
 }
 
+function sign(x) {
+    return (x > 0) - (x < 0);
+}
+
 function zeroPad(num, size) {
-  var s = num+"";
-  while (s.length < size) s = "0" + s;
+  var s = num+'';
+  while (s.length < size) s = '0' + s;
   return s;
 }
 
