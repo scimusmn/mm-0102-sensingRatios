@@ -1,3 +1,4 @@
 <config>
-  <muteTimeout type="num">600</muteTimeout>
+  <muteTimeout type="num">10000</muteTimeout>
+  <calibrate>true</calibrate>
 </config>

@@ -156,17 +156,18 @@ include([], function() {
 
     this.onMessage = function(evt) {
       msg = evt.data;
-      if (msg.length > 1)
-      for (var i = 0; i < msg.length; i++) {
-        var chr = msg.charCodeAt(i);
-        if (chr & ANA_READ) {  //if the packet is analogRead
-          var pin = ((chr & 56) >> 3);        //extract the pin number
-          var val = ((chr & 7) << 7) + (msg.charCodeAt(++i) & 127); //extract the value
-          if (typeof _this.anaHandlers[pin] == 'function') _this.anaHandlers[pin](pin, val);
-        } else if (chr & (START + DIGI_READ)) {      //if the packet is digitalRead
-          var pin = ((chr & 62) >> 1);
-          var val = chr & 1;
-          if (typeof _this.digiHandlers[pin] == 'function') _this.digiHandlers[pin](val);
+      if (msg.length >= 1) {
+        for (var i = 0; i < msg.length; i++) {
+          var chr = msg.charCodeAt(i);
+          if (chr & ANA_READ) {  //if the packet is analogRead
+            var pin = ((chr & 56) >> 3);        //extract the pin number
+            var val = ((chr & 7) << 7) + (msg.charCodeAt(++i) & 127); //extract the value
+            if (typeof _this.anaHandlers[pin] == 'function') _this.anaHandlers[pin](pin, val);
+          } else if (chr & (START + DIGI_READ)) {      //if the packet is digitalRead
+            var pin = ((chr & 62) >> 1);
+            var val = chr & 1;
+            if (typeof _this.digiHandlers[pin] == 'function') _this.digiHandlers[pin](pin, val);
+          }
         }
       }
     };
@@ -190,6 +191,7 @@ include([], function() {
     };
 
     this.watchPin = function(pin, handler) {
+      console.log('set up watch on pin ' + pin);
       if (pin <= 13) this.ws.send('r|' + asChar(START + DIGI_WATCH + (pin & 15)));
       else this.ws.send('r|' + asChar(START + DIGI_WATCH_2 + ((pin - 13) & 7)));
       this.digiHandlers[pin] = handler;
@@ -335,6 +337,7 @@ include([], function() {
 
         } else if (item.type === 'digital') {
           _this.watchPin(item.pin, function(pin, val) {
+            console.log(val);
             if (!item.hit) {
               if (!item.target) item.onData(val);
               else item.target[item.which](val);

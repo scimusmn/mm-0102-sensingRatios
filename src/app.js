@@ -31,12 +31,11 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
 
   µ('#volumeControl').old = 0;
   µ('#volumeControl').onData = function(val) {
-    if (Math.abs(val - this.oldVol) > .02) {
+    if (Math.abs(val - this.old) > .02) {
       audio.left.setVolume(val);
       audio.right.setVolume(val);
       resetMuteTimeout();
-      this.oldVol = val;
-
+      this.old = val;
     }
   };
 
@@ -46,18 +45,21 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
   var doubleBtnPress = false;
 
   µ('#resetButton').onData = function(val) {
+    console.log('resetbut is ' + val);
     if (val) resetForNewUser();
 
     // TEMP - Secret toggle for testing sine waves...
     if (val && doubleBtnPress) cycleSineMode();
     doubleBtnPress = true;
-    setTimeout(function () { doubleBtnPress = false; }, 500);
-    // End TEMP
+    setTimeout(function() { doubleBtnPress = false; }, 500);
 
+    // End TEMP
+    console.log('reset');
   };
 
   µ('#cycleButton').onData = function(val) {
     if (val) cycleActivity();
+    console.log('cycle');
   };
 
   //when the window resizes, resize the canvas.
@@ -79,7 +81,6 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
   //set the trace to fade in the window
   µ('#trace').fade = true;
   µ('#trace').lineColor = 'rgba(0, 120, 174, 1)';
-
 
   //set the canvas to redraw at 30fps
   setInterval(function() {

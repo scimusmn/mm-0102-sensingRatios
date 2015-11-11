@@ -2,10 +2,10 @@
   <head>
     <link rel="stylesheet" href="css/main.css"></link>
     <script src="src/smmInclude.js" main="src/app.js"></script>
-    <hard-ware serialport="usbmodem">
-      <!-- <in-put type="analog" pin="0" report="30" low="0" hi="1023" result="#trace.newX"></in-put>
-      <in-put type="analog" pin="1" report="30" low="1023" hi="0" result="#trace.newY"></in-put> -->
-      <in-put id="volumeControl" type="analog" pin="2" report="30" low="0" hi="1023"></in-put>
+    <hard-ware serialport="usbserial">
+      <in-put type="analog" pin="0" report="30" hi="52" low="717" result="#trace.newY"></in-put>
+      <in-put type="analog" pin="1" report="30" low="160" hi="831" result="#trace.newX"></in-put>
+      <in-put id="volumeControl" type="analog" pin="2" report="10" low="0" hi="1023"></in-put>
       <in-put id="resetButton" type="digital" debounce="100" pin="2"></in-put>
       <in-put id="cycleButton" type="digital" debounce="100" pin="3"></in-put>
       <out-put id="light" type="digital" pin="13"></out-put>
