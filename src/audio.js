@@ -30,11 +30,12 @@ include([], function() {
 
     this.rampTimer;
     this.volume = 1;
+    this.eVolume = 1;
     this.volScale = 1;
     this.muted = false;
 
     this.rampVolume = function(vol) {
-      if (Math.abs(_this.volume - vol) > .01) {
+      if (Math.abs(_this.volume - vol) > .01 || this.muted) {
         _this.volume += sign(vol - _this.volume) * .01;
         gain.gain.value = _this.volume * _this.volScale;
         clearTimeout(_this.rampTimer);
@@ -48,6 +49,7 @@ include([], function() {
 
     this.setVolume = function(vol) {
       this.volume = vol;
+      this.eVolume = vol;
       gain.gain.value = vol * this.volScale;
     };
 
@@ -85,7 +87,8 @@ include([], function() {
       if (this.volScale > 1) this.volScale = 1;
 
       if (!this.muted) gain.gain.value = this.volume * this.volScale;
-      else this.rampVolume(1);
+      else this.rampVolume(this.eVolume);
+
       this.setFrequency(targFreq);
     };
   };

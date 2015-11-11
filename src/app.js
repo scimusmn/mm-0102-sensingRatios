@@ -1,8 +1,8 @@
 include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.js', 'src/smm_config.js', 'src/vendor/CanvasSineWave.js'], function() {
 
   //mute the left and right audio channels.
-  audio.left.mute();
-  audio.right.mute();
+  //audio.left.mute();
+  //audio.right.mute();
 
   //on mouse move over the trace, update the mouse position
   µ('#trace').addEventListener('mousemove', function(evt) {

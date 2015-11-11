@@ -5,8 +5,8 @@ function pointStack(maxPnts) {
   var bAver = true;
 
   //var averDiff = new aveCont();
-  var sampsX = new aveCont();
-  var sampsY = new aveCont();
+  var sampsX = new aveCont(10);
+  var sampsY = new aveCont(10);
 
   points.changeAveraging = function(num) {
     if (num < 2) bAver = false;
@@ -60,7 +60,7 @@ function pointStack(maxPnts) {
 
   points.hasMoved = function(pnt) {
 
-    return (Math.abs(pnt.x - points.last().x) > .001 || Math.abs(pnt.y - points.last().y) > .001);
+    return (Math.abs(pnt.x - points.last().x) > .001 || Math.abs(pnt.y - points.last().y) > .01);
 
   };
 
