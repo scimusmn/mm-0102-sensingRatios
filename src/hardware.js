@@ -262,6 +262,7 @@ include([], function() {
       this.type = this.getAttribute('type');
       this.pin = this.getAttribute('pin');
       if (this.type == 'analog') {
+        this.raw = 0;
         this.min = µ('|>low', this);
         this.max = µ('|>hi', this);
         this.report = parseInt(this.getAttribute('report'));
@@ -326,6 +327,7 @@ include([], function() {
         if (item.type === 'analog') {
           //create the handler function to parse the data
           function handle(pin, val) {
+            item.raw = val;
             if (item.min && item.max) val = map(val, item.min, item.max, 0, 1);
             if (!item.target) item.onData(val);
             else item.target[item.which](val);

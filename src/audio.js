@@ -50,6 +50,7 @@ include([], function() {
     this.setVolume = function(vol) {
       this.volume = vol;
       this.eVolume = vol;
+      if (vol) muted = false;
       gain.gain.value = this.volume * this.volScale;
     };
 
@@ -83,7 +84,7 @@ include([], function() {
       targFreq = clamp(targFreq, 0, 6400);
 
       //scale the volume as frequency increases, so it isn't totally obnoxious.
-      this.volScale = Math.pow(50. / targFreq, .7);
+      this.volScale = Math.pow(50. / targFreq, .8);
       if (this.volScale > 1) this.volScale = 1;
 
       if (!this.muted) gain.gain.value = this.volume * this.volScale;

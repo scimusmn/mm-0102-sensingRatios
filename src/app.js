@@ -4,6 +4,15 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
   //audio.left.mute();
   //audio.right.mute();
 
+  if (checkCookie('yAxis.min')) {
+    µ('#yAxis').min = parseInt(getCookie('yAxis.min'));
+    µ('#yAxis').max = parseInt(getCookie('yAxis.max'));
+    µ('#xAxis').min = parseInt(getCookie('xAxis.min'));
+    µ('#xAxis').max = parseInt(getCookie('xAxis.max'));
+  } else {
+    alert('Sliders not calibrated; pull sliders all the way toward you and press "l"');
+  }
+
   //on mouse move over the trace, update the mouse position
   µ('#trace').addEventListener('mousemove', function(evt) {
     var rect = this.getBoundingClientRect();
@@ -109,8 +118,18 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
       if (audio.left.muted) audio.left.unmute(), audio.right.unmute();
       else audio.left.mute(), audio.right.mute();
 
-    } else if (keyCode === charCode('l')) { // 'm' = mute
-      µ('#light').write(!µ('#light').state);
+    } else if (keyCode == charCode('l')) {
+      var yMin = µ('#xAxis').min = µ('#yAxis').raw;
+      var xMin = µ('#xAxis').min = µ('#xAxis').raw;
+      setCookie('yAxis.min', yMin.toString(), 10000);
+      setCookie('xAxis.min', yMin.toString(), 10000);
+      alert('Minimum set. Push sliders forward, and press "h"');
+    } else if (keyCode == charCode('h')) {
+      var yMax = µ('#xAxis').max = µ('#yAxis').raw;
+      var xMax = µ('#xAxis').max = µ('#xAxis').raw;
+      setCookie('yAxis.max', yMax.toString(), 10000);
+      setCookie('xAxis.max', yMax.toString(), 10000);
+      alert('Maximum set. Sliders calibrated.');
     }
 
   };
