@@ -88,7 +88,7 @@ include([], function() {
       if (this.volScale > 1) this.volScale = 1;
 
       if (!this.muted) gain.gain.value = this.volume * this.volScale;
-      else this.unmute;
+      else this.unmute();
 
       this.setFrequency(targFreq);
     };
