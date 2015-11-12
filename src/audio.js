@@ -50,7 +50,7 @@ include([], function() {
     this.setVolume = function(vol) {
       this.volume = vol;
       this.eVolume = vol;
-      if (vol) muted = false;
+      if (vol > 0) muted = false;
       gain.gain.value = this.volume * this.volScale;
     };
 
@@ -61,7 +61,7 @@ include([], function() {
 
     this.unmute = function() {
       this.muted = false;
-      gain.gain.value = this.volume * this.volScale;
+      this.rampVolume(this.eVolume);
     };
 
     this.setFrequency = function(freq) {
@@ -88,7 +88,7 @@ include([], function() {
       if (this.volScale > 1) this.volScale = 1;
 
       if (!this.muted) gain.gain.value = this.volume * this.volScale;
-      else this.rampVolume(this.eVolume);
+      else this.unmute;
 
       this.setFrequency(targFreq);
     };
