@@ -82,7 +82,7 @@ include([], function() {
       var targFreq = base * Math.pow(2, (val / octSize)) / 2;
 
       //restrict freq to 6400hz max
-      targFreq = clamp(targFreq, 0, 6400);
+      targFreq = Math.floor(clamp(targFreq, 0, 6400));
 
       //scale the volume as frequency increases, so it isn't totally obnoxious.
       this.volScale = Math.pow(50. / targFreq, .8);
