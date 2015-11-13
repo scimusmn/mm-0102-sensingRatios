@@ -318,6 +318,7 @@ function drawGraphOverlays() {
     default:
 
     // Don't draw an overlay.
+    break;
   }
 
 };
@@ -530,4 +531,3 @@ function cycleSineMode() {
 }
 
 cycleSineMode();
-

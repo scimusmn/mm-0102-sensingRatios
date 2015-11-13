@@ -1,15 +1,14 @@
-include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.js', 'src/smm_config.js', 'src/vendor/CanvasSineWave.js'], function() {
+include(['src/Muse/graph.js', 'src/interface.js', 'src/Muse/audio.js', 'src/Muse/hardware.js', 'src/Muse/config.js', 'src/vendor/CanvasSineWave.js'], function() {
 
-  //mute the left and right audio channels.
-  //audio.left.mute();
-  //audio.right.mute();
-
+  //check to see if there is a calibration stored for the sliders.
   if (localStorage.yMin) {
+    //grab the calibrations if there is one present.
     µ('#yAxis').min = localStorage.yMin;
     µ('#yAxis').max = localStorage.yMax;
     µ('#xAxis').min = localStorage.xMin;
     µ('#xAxis').max = localStorage.xMax;
   } else {
+    //warn if there is no slider calibration, warn about it.
     alert('Sliders not calibrated; pull sliders all the way toward you and press "l"');
   }
 
@@ -38,41 +37,50 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
 
   //set the callback for volume control from the pot.
 
+  //initialize the value to store the previous pot position.
   µ('#volumeControl').old = 0;
   µ('#volumeControl').onData = function(val) {
+    //if the current volume value is different from the previous volume
+    // value, process the new value.
     if (Math.abs(val - this.old) > .02) {
-      if(audio.left.muted){
+
+      //if the audio is muted, unmute it.
+      if (audio.left.muted) {
         audio.right.unmute();
         audio.left.unmute();
       }
+
+      //set the volume of each channel to the current knob position
       audio.left.setVolume(val);
       audio.right.setVolume(val);
+
+      //reset the timeout for muting the audio.
       resetMuteTimeout();
       this.old = val;
     }
   };
 
+  /////////////////////////////////
   //callbacks for hardware buttons
+  /////////////////////////////////
 
-  // TEMP - should be removed eventually
   var doubleBtnPress = false;
 
-  µ('#resetButton').onData = function(val) {
-    console.log('resetbut is ' + val);
+  µ('#resetButton').onData = function(val){
+    //if the button switched from not pressed to pressed, trigger reset
     if (val) resetForNewUser();
 
     // TEMP - Secret toggle for testing sine waves...
-    if (val && doubleBtnPress) cycleSineMode();
-    doubleBtnPress = true;
-    setTimeout(function() { doubleBtnPress = false; }, 500);
+    //if (val && doubleBtnPress) cycleSineMode();
+    //doubleBtnPress = true;
+    //setTimeout(function() { doubleBtnPress = false; }, 500);
 
     // End TEMP
-    console.log('reset');
   };
 
   µ('#cycleButton').onData = function(val) {
+    //if the button switched from not pressed to pressed, cycle the screens
     if (val) cycleActivity();
-    console.log('cycle');
   };
 
   //when the window resizes, resize the canvas.
@@ -83,11 +91,15 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
 
   //when the trace receives a new point, update the audio tones.
   µ('#trace').onNewPoint = function() {
+    //with a new point, reset the mute timeout.
     resetMuteTimeout();
+
+    //call the functions to update the frequency.
     audio.left.changeFrequency(1 - µ('#trace').lastPoint().y, 1 / µ('#trace').range.y.divs);
     audio.right.changeFrequency(µ('#trace').lastPoint().x, 1 / µ('#trace').range.x.divs);
 
-    updateFrequencyReadouts(Math.round(audio.left.getFrequency()), Math.round(audio.right.getFrequency()));
+    //change the displayed frequency
+    updateFrequencyReadouts(audio.left.getFrequency(), audio.right.getFrequency());
 
   };
 
@@ -99,9 +111,6 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
   setInterval(function() {
 
     µ('#trace').draw();
-
-    // Update audio visualizers
-    // updateAmplitudes(audio.left.getVolume(), audio.right.getVolume());
 
   }, 1000 / 30);
 
@@ -123,10 +132,14 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
       else audio.left.mute(), audio.right.mute();
 
     } else if (keyCode == charCode('l')) {
+      //store the current raw reading from the slider as the min calibration
       localStorage.yMin = µ('#xAxis').min = µ('#yAxis').raw;
       localStorage.xMin = µ('#xAxis').min = µ('#xAxis').raw;
+
+      //alert that the minimum has been set, instruct how to set the high.
       alert('Minimum set. Push sliders forward, and press "h"');
     } else if (keyCode == charCode('h')) {
+      //store the current raw reading from the slider as the max calibration
       localStorage.yMax = µ('#xAxis').max = µ('#yAxis').raw;
       localStorage.xMax = µ('#xAxis').max = µ('#xAxis').raw;
       alert('Maximum set. Sliders calibrated.');
