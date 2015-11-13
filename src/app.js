@@ -18,7 +18,7 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
     var rect = this.getBoundingClientRect();
     this.mouse = {
       x: (evt.clientX - rect.left) / this.width,
-      y: (evt.clientY - rect.top) / this.height,
+      y: 1-((evt.clientY - rect.top) / this.height),
     };
 
     //add the current mouse position to the stack of current points.
