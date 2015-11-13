@@ -50,7 +50,7 @@ include([], function() {
     this.setVolume = function(vol) {
       this.volume = vol;
       this.eVolume = vol;
-      if (vol > 0) muted = false;
+      if (this.volume > 0) muted = false;
       else muted = true;
       gain.gain.value = this.volume * this.volScale;
     };

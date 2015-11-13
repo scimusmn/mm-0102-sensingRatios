@@ -18,7 +18,7 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
     var rect = this.getBoundingClientRect();
     this.mouse = {
       x: (evt.clientX - rect.left) / this.width,
-      y: 1-((evt.clientY - rect.top) / this.height),
+      y: 1 - ((evt.clientY - rect.top) / this.height),
     };
 
     //add the current mouse position to the stack of current points.
@@ -41,6 +41,10 @@ include(['src/smm_graph.js', 'src/interface.js', 'src/audio.js', 'src/hardware.j
   µ('#volumeControl').old = 0;
   µ('#volumeControl').onData = function(val) {
     if (Math.abs(val - this.old) > .02) {
+      if(audio.left.muted){
+        audio.right.unmute();
+        audio.left.unmute();
+      }
       audio.left.setVolume(val);
       audio.right.setVolume(val);
       resetMuteTimeout();
