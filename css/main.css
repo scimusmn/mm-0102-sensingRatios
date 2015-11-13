@@ -14,6 +14,7 @@ body {
   width: 1920px;
   height: 1080px;
   overflow: hidden;
+  cursor: none;
 }
 
 h1, h2, h3 {
