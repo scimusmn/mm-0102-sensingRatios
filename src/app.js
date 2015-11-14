@@ -66,7 +66,7 @@ include(['src/Muse/graph.js', 'src/interface.js', 'src/Muse/audio.js', 'src/Muse
 
   var doubleBtnPress = false;
 
-  µ('#resetButton').onData = function(val){
+  µ('#resetButton').onData = function(val) {
     //if the button switched from not pressed to pressed, trigger reset
     if (val) resetForNewUser();
 

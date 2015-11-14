@@ -317,7 +317,7 @@ function drawGraphOverlays() {
     break;
     default:
 
-    // Don't draw an overlay.
+      // Don't draw an overlay.
     break;
   }
 
